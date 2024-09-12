@@ -2,27 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/android.iml" filepath="$PROJECT_DIR$/.idea/modules/android.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/cli-platform-android.iml" filepath="$PROJECT_DIR$/.idea/modules/cli-platform-android.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/expo-asset.android.iml" filepath="$PROJECT_DIR$/.idea/modules/expo-asset.android.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/expo-constants.android.iml" filepath="$PROJECT_DIR$/.idea/modules/expo-constants.android.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/expo-constants.scripts.iml" filepath="$PROJECT_DIR$/.idea/modules/expo-constants.scripts.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/expo-file-system.android.iml" filepath="$PROJECT_DIR$/.idea/modules/expo-file-system.android.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/expo-font.android.iml" filepath="$PROJECT_DIR$/.idea/modules/expo-font.android.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/expo-keep-awake.android.iml" filepath="$PROJECT_DIR$/.idea/modules/expo-keep-awake.android.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/expo-modules-core.android.iml" filepath="$PROJECT_DIR$/.idea/modules/expo-modules-core.android.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/gradle-plugin-root.iml" filepath="$PROJECT_DIR$/.idea/modules/gradle-plugin-root.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/gradle-plugin-root.main.iml" filepath="$PROJECT_DIR$/.idea/modules/gradle-plugin-root.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/react-native-gradle-plugin/gradle-plugin-root.react-native-gradle-plugin.iml" filepath="$PROJECT_DIR$/.idea/modules/react-native-gradle-plugin/gradle-plugin-root.react-native-gradle-plugin.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/react-native-gradle-plugin/gradle-plugin-root.react-native-gradle-plugin.main.iml" filepath="$PROJECT_DIR$/.idea/modules/react-native-gradle-plugin/gradle-plugin-root.react-native-gradle-plugin.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/react-native-gradle-plugin/gradle-plugin-root.react-native-gradle-plugin.test.iml" filepath="$PROJECT_DIR$/.idea/modules/react-native-gradle-plugin/gradle-plugin-root.react-native-gradle-plugin.test.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/settings-plugin/gradle-plugin-root.settings-plugin.iml" filepath="$PROJECT_DIR$/.idea/modules/settings-plugin/gradle-plugin-root.settings-plugin.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/settings-plugin/gradle-plugin-root.settings-plugin.main.iml" filepath="$PROJECT_DIR$/.idea/modules/settings-plugin/gradle-plugin-root.settings-plugin.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/settings-plugin/gradle-plugin-root.settings-plugin.test.iml" filepath="$PROJECT_DIR$/.idea/modules/settings-plugin/gradle-plugin-root.settings-plugin.test.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/gradle-plugin-root.test.iml" filepath="$PROJECT_DIR$/.idea/modules/gradle-plugin-root.test.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/react-native.iml" filepath="$PROJECT_DIR$/.idea/modules/react-native.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/scripts.iml" filepath="$PROJECT_DIR$/.idea/modules/scripts.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/scripts.android.iml" filepath="$PROJECT_DIR$/.idea/modules/scripts.android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/NodeApp.iml" filepath="$PROJECT_DIR$/.idea/NodeApp.iml" />
     </modules>
   </component>
 </project>
