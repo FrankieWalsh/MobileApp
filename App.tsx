@@ -1,10 +1,14 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
+import Component from "./MyComponent";
+import CustomText from './CustomText';
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
+      <Text>Hello :)</Text>
+      <Component />
+        <CustomText text="This is a custom message passed as a prop!" />
       <StatusBar style="auto" />
     </View>
   );
