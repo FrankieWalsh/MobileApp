@@ -28,13 +28,18 @@ router.get('/:id', async (req, res) => {
 
 // POST (create) a new car
 router.post('/', async (req, res) => {
-    const { name, model, price, description } = req.body;
+    const { model, type, price, number_of_seats, specifications, availability, location_id } = req.body;
+
     const car = new Car({
-        name,
         model,
+        type,
         price,
-        description,
+        number_of_seats,
+        specifications,
+        availability,
+        location_id,
     });
+
     try {
         const newCar = await car.save();
         res.status(201).json(newCar);

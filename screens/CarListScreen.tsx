@@ -32,7 +32,7 @@ const CarListScreen = ({ navigation }) => {
     const renderItem = ({ item }) => (
         <TouchableOpacity onPress={() => navigation.navigate('CarDetails', { carId: item._id })}>
             <View style={styles.item}>
-                <Text style={styles.title}>{item.name}</Text>
+                <Text style={styles.title}>{item.model}</Text>
                 <Text>{item.price}</Text>
             </View>
         </TouchableOpacity>

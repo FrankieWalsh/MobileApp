@@ -37,9 +37,15 @@ const CarDetailsScreen = ({ route, navigation }) => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>{car.name}</Text>
+            <Text style={styles.title}>{car.model}</Text>
+            <Text>Type: {car.type}</Text>
+            <Text>Number of seats: {car.number_of_seats}</Text>
             <Text>Price: {car.price}</Text>
-            <Text>Description: {car.description}</Text>
+            <Text>Specifications:</Text>
+            {/*JSON handler*/}
+            {car.specifications && Object.entries(car.specifications).map(([key, value]) => (
+                <Text key={key}>{`${key}: ${value}`}</Text>
+            ))}
             <Button title="Book Now" onPress={() => navigation.navigate('Booking', { carId })} />
         </View>
     );
