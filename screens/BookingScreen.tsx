@@ -1,30 +1,52 @@
-import React from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, Button, StyleSheet, TextInput, Alert } from 'react-native';
+import { bookCar } from '../apiService';
 
 const BookingScreen = ({ route, navigation }) => {
-    const { car } = route.params;
+    const { carId } = route.params;
+    const [dates, setDates] = useState('');
+    const [pickupLocation, setPickupLocation] = useState('');
+    const [dropOffLocation, setDropOffLocation] = useState('');
+
+    const handleBooking = async () => {
+        const bookingDetails = {
+            rentalDates: dates,
+            pickupLocation,
+            dropOffLocation,
+        };
+
+        try {
+            await bookCar(carId, bookingDetails);
+            Alert.alert('Booking Confirmed', 'Your car has been booked successfully.');
+            navigation.navigate('BookingConfirmation', { carId });
+        } catch (error) {
+            Alert.alert('Booking Failed', 'There was an error processing your booking.');
+        }
+    };
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Booking for {car.name}</Text>
-            <Text>Confirm your booking details...</Text>
-            <Button
-                title="Proceed to Payment"
-                onPress={() => navigation.navigate('Payment', { car })}
-            />
+            <Text>Enter rental dates:</Text>
+            <TextInput value={dates} onChangeText={setDates} placeholder="e.g., 2024-10-01 to 2024-10-05" style={styles.input} />
+            <Text>Pickup Location:</Text>
+            <TextInput value={pickupLocation} onChangeText={setPickupLocation} placeholder="e.g., Copenhagen" style={styles.input} />
+            <Text>Drop-off Location:</Text>
+            <TextInput value={dropOffLocation} onChangeText={setDropOffLocation} placeholder="e.g., Aarhus" style={styles.input} />
+            <Button title="Confirm Booking" onPress={handleBooking} />
         </View>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
+        padding: 16,
     },
-    title: {
-        fontSize: 24,
-        marginBottom: 20,
+    input: {
+        borderWidth: 1,
+        borderColor: '#ccc',
+        padding: 8,
+        marginBottom: 12,
+        borderRadius: 4,
     },
 });
 
