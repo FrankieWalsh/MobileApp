@@ -43,4 +43,15 @@ router.post('/', async (req, res) => {
     }
 });
 
+// DELETE all cars in db
+router.delete('/', async (req, res) => {
+    try {
+        const result = await Car.deleteMany();
+        console.log("All cars deleted, result:", result);
+        res.json({ message: 'All cars deleted', result });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
 module.exports = router;
