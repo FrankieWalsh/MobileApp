@@ -57,6 +57,7 @@ const CarListScreen: React.FC = ({ navigation }: any) => {
     const applyFilters = () => {
         const filtered = cars.filter(car => {
             return (
+                car.availability = true &&
                 car.price >= minPrice &&
                 car.price <= maxPrice &&
                 car.number_of_seats >= minSeats &&
