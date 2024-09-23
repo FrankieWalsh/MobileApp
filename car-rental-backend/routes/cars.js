@@ -28,9 +28,10 @@ router.get('/:id', async (req, res) => {
 
 // POST (create) a new car
 router.post('/', async (req, res) => {
-    const { model, type, price, number_of_seats, specifications, availability, location_id } = req.body;
+    const { brand, model, type, price, number_of_seats, specifications, availability, location_id, image } = req.body;
 
     const car = new Car({
+        brand,
         model,
         type,
         price,
@@ -38,6 +39,7 @@ router.post('/', async (req, res) => {
         specifications,
         availability,
         location_id,
+        image,
     });
 
     try {
