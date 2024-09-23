@@ -52,7 +52,10 @@ const CarListScreen = ({ navigation }) => {
     }
 
     const renderItem = ({ item }) => (
-        <TouchableOpacity onPress={() => navigation.navigate('CarDetails', { carId: item._id })}>
+        <TouchableOpacity
+            activeOpacity={0.5}
+            onPress={() => navigation.navigate('CarDetails', { carId: item._id })}
+        >
             <View style={styles.card}>
                 <Image
                     source={getImage(item.image)}
