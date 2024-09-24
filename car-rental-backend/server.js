@@ -13,9 +13,11 @@ app.use(express.json());
 
 // Routes
 const carRoutes = require('./routes/cars');
+const userRoutes = require('./routes/user');
 const bookingRoutes = require('./routes/bookings');
 
 app.use('/api/cars', carRoutes);
+app.use('/api/user', userRoutes);
 app.use('/api/bookings', bookingRoutes);
 
 // Connect to MongoDB

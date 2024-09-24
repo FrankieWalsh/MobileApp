@@ -1,7 +1,8 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://192.168.111.2:5000/api'; //Change to your computers IP
+const BASE_URL = 'http://192.168.111.2:5000/api'; // Change to your computer's IP
 
+// Get list of cars
 export const getCars = async () => {
     try {
         const response = await axios.get(`${BASE_URL}/cars`);
@@ -12,7 +13,7 @@ export const getCars = async () => {
     }
 };
 
-// Function to get car details by ID
+// Get car details by ID
 export const getCarDetails = async (carId: string) => {
     try {
         const response = await axios.get(`${BASE_URL}/cars/${carId}`);
@@ -23,7 +24,7 @@ export const getCarDetails = async (carId: string) => {
     }
 };
 
-// Function to book a car
+// Book a car
 export const bookCar = async (carId: string, bookingDetails: any) => {
     try {
         const response = await axios.post(`${BASE_URL}/bookings`, {
@@ -33,6 +34,35 @@ export const bookCar = async (carId: string, bookingDetails: any) => {
         return response.data;
     } catch (error) {
         console.error('Error booking the car:', error);
+        throw error;
+    }
+};
+
+// User login
+export const loginUser = async (email: string, password: string) => {
+    try {
+        const response = await axios.post(`${BASE_URL}/user/login`, {
+            email,
+            password,
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error logging in:', error);
+        throw error;
+    }
+};
+
+// User signup
+export const signUpUser = async (name: string, email: string, password: string) => {
+    try {
+        const response = await axios.post(`${BASE_URL}/user/signup`, {
+            name,
+            email,
+            password,
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error signing up:', error);
         throw error;
     }
 };
