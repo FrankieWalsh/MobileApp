@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, Button, StyleSheet, TextInput, Alert } from 'react-native';
-import { loginUser } from '../apiService'; // Import the loginUser function
+import { loginUser } from '../apiService';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RouteProp } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type RootStackParamList = {
     Login: undefined;
@@ -11,11 +11,9 @@ type RootStackParamList = {
 };
 
 type LoginScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
-type LoginScreenRouteProp = RouteProp<RootStackParamList, 'Login'>;
 
 type Props = {
     navigation: LoginScreenNavigationProp;
-    route: LoginScreenRouteProp;
 };
 
 const LoginScreen: React.FC<Props> = ({ navigation }) => {
@@ -29,14 +27,15 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
         }
 
         try {
-            const response = await loginUser(email, password);  // Use loginUser function from apiService
+            const response = await loginUser(email, password);
 
             if (response.token) {
+                await AsyncStorage.setItem('userId', response.userId);
+
                 Alert.alert('Success', 'Login successful');
-                navigation.navigate('Home'); // Navigate to Home screen upon successful login
+                navigation.navigate('Home');
             }
         } catch (error) {
-            console.error(error);
             Alert.alert('Error', 'Invalid login credentials');
         }
     };

@@ -8,7 +8,6 @@ const BookingSchema = new mongoose.Schema({
     },
     car_id: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Car',
         required: true,
     },
     rental_start_date: {
@@ -21,18 +20,16 @@ const BookingSchema = new mongoose.Schema({
     },
     pickup_location_id: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Location',
         required: true,
     },
     dropoff_location_id: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Location',
         required: true,
     },
     status: {
         type: String,
         required: true,
-        enum: ['pending', 'confirmed', 'cancelled'],
+        enum: ['confirmed', 'cancelled'],
         default: 'pending',
     }
 });
