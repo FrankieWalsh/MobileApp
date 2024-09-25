@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://192.168.111.2:5000/api'; // Change to your computer's IP
 const BASE_URL = 'http://10.126.33.46:5000/api'; // Change to your computer's IP
 
 // Get list of cars
