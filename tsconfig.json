@@ -6,4 +6,3 @@
   },
   "extends": "expo/tsconfig.base"
 }
-}
