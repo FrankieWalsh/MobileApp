@@ -9,10 +9,6 @@
     "web": "expo start --web"
   },
   "dependencies": {
-<<<<<<< Updated upstream
-=======
-    "@react-native-assets/slider": "^7.2.1",
->>>>>>> Stashed changes
     "@react-native-async-storage/async-storage": "^2.0.0",
     "@react-native-community/datetimepicker": "8.0.1",
     "@react-native-community/slider": "4.5.2",
@@ -27,15 +23,7 @@
     "react": "^18.3.1",
     "react-native": "^0.75.3",
     "react-native-date-picker": "^5.0.7",
-<<<<<<< Updated upstream
     "react-native-picker-select": "^9.3.1"
-=======
-    "react-native-fast-image": "^8.6.3",
-    "react-native-maps": "^1.18.0",
-    "react-native-picker-select": "^9.3.1",
-    "react-native-range-slider": "^0.1.2",
-    "react-native-range-slider-expo": "^1.4.3"
->>>>>>> Stashed changes
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
