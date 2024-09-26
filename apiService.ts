@@ -1,6 +1,7 @@
 import axios from 'axios';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const BASE_URL = 'http://10.126.33.46:5000/api'; // Change to your computer's IP
+const BASE_URL = 'http://10.141.97.231:5000/api'; // For your Wi-Fi connection
 
 // Get list of cars
 export const getCars = async () => {
@@ -74,6 +75,17 @@ export const getLocations = async () => {
         return response.data;
     } catch (error) {
         console.error('Error fetching locations:', error);
+        throw error;
+    }
+};
+
+export const getUserBooking = async () => {
+    try {
+        const userId = await AsyncStorage.getItem('userId');
+        const response = await axios.get(`${BASE_URL}/bookings/user/${userId}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching user booking:', error);
         throw error;
     }
 };
