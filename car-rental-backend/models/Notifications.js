@@ -10,10 +10,13 @@ const NotificationSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    timestamp: {
-        type: Date,
-        default: Date.now,
-    }
+    details: {
+        type: String,
+    },
+    isRead: {
+        type: Boolean,
+        default: false,
+    },
 });
 
 module.exports = mongoose.model('Notification', NotificationSchema);
