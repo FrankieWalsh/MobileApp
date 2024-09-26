@@ -12,7 +12,6 @@ import PaymentScreen from './screens/PaymentScreen';
 import ConfirmationScreen from './screens/ConfirmationScreen';
 import LoginScreen from './screens/LoginScreen';
 import SignUpScreen from './screens/SignUpScreen';
-import CarListScreen from './screens/CarListScreen';
 import NotificationsScreen from './screens/NotificationsScreen';
 
 // Define the type for the Stack Navigator
@@ -41,7 +40,6 @@ const App: React.FC = () => {
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="CarDetails" component={CarDetailsScreen} />
           <Stack.Screen name="Notifications" component={NotificationsScreen} />
-          <Stack.Screen name="CarList" component={CarListScreen} />
           <Stack.Screen name="Booking" component={BookingScreen} />
           <Stack.Screen name="Payment" component={PaymentScreen} />
           <Stack.Screen name="Confirmation" component={ConfirmationScreen} />

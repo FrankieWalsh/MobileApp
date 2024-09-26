@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 //import { View, Text, Button, StyleSheet } from 'react-native';
 import { Image, View, Button, FlatList, Text, TouchableOpacity, StyleSheet, ActivityIndicator, Dimensions } from 'react-native';
 import { getCars } from '../apiService';
-import FilterComponent from '../FilterComponent';
+import FilterComponent from '../components/FilterComponent';
 
 const imageMap = {
     'white-tesla.png': require('../assets/cars/white-tesla.png'),
