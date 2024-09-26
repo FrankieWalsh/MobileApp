@@ -1,222 +1,212 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, ActivityIndicator, ScrollView } from 'react-native';
-import { getUserBooking } from '../apiService';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import Header from '../header/header';
-import { useFocusEffect } from '@react-navigation/native';
+import React, { useState, useEffect } from 'react';
+//import { View, Text, Button, StyleSheet } from 'react-native';
+import { Image, View, Button, FlatList, Text, TouchableOpacity, StyleSheet, ActivityIndicator, Dimensions, SafeAreaView } from 'react-native';
+import { getCars } from '../apiService';
+import FilterComponent from '../components/FilterComponent';
+import Icon from 'react-native-vector-icons/Ionicons'; // Example: using Ionicons
 
-// Function to map car images dynamically
-const getImageForCar = (imageName) => {
-    const images = {
-        'white-tesla.png': require('../assets/cars/white-tesla.png'),
-        'black-toyota.png': require('../assets/cars/black-toyota.png'),
-        'gray-toyota.png': require('../assets/cars/gray-toyota.png'),
-        'red-bmw.png': require('../assets/cars/red-bmw.png'),
-        'blue-bmw.png': require('../assets/cars/blue-bmw.png'),
-        'black-audi.png': require('../assets/cars/black-audi.png'),
-        'blue-honda.png': require('../assets/cars/blue-honda.png'),
-        'green-mini.png': require('../assets/cars/green-mini.png'),
-        'black-land-rover.png': require('../assets/cars/black-land-rover.png'),
-        'blue-jeep.png': require('../assets/cars/blue-jeep.png'),
-        'black-bmw.png': require('../assets/cars/black-bmw.png'),
-        'black-noah-toyota.png': require('../assets/cars/black-noah-toyota.png'),
-        'blue-ford.png': require('../assets/cars/blue-ford.png'),
-        'silver-bmw.png': require('../assets/cars/silver-bmw.png'),
-    };
-
-    return images[imageName] || require('../assets/cars/silver-bmw.png'); // Fallback to a default image
+const imageMap = {
+    'white-tesla.png': require('../assets/cars/white-tesla.png'),
+    'black-toyota.png': require('../assets/cars/black-toyota.png'),
+    'gray-toyota.png': require('../assets/cars/gray-toyota.png'),
+    'red-bmw.png': require('../assets/cars/red-bmw.png'),
+    'blue-bmw.png': require('../assets/cars/blue-bmw.png'),
+    'black-audi.png': require('../assets/cars/black-audi.png'),
+    'blue-honda.png': require('../assets/cars/blue-honda.png'),
+    'green-mini.png': require('../assets/cars/green-mini.png'),
+    'black-land-rover.png': require('../assets/cars/black-land-rover.png'),
+    'blue-jeep.png': require('../assets/cars/blue-jeep.png'),
+    'black-bmw.png': require('../assets/cars/black-bmw.png'),
+    'black-noah-toyota.png': require('../assets/cars/black-noah-toyota.png'),
+    'blue-ford.png': require('../assets/cars/blue-ford.png'),
+    'silver-bmw.png': require('../assets/cars/silver-bmw.png'),
 };
 
-const HomeScreen = ({ navigation }) => {
-    const [userName, setUserName] = useState('');
-    const [bookings, setBookings] = useState([]);
+const { width } = Dimensions.get('window');
+
+const getImage = (imageName: string) => {
+    return imageMap[imageName];
+};
+
+
+const HomeScreen: React.FC = ({ navigation }: any) => {
+    
+    useEffect(() => {
+        navigation.setOptions({
+            headerShown: false, // Disable header
+        });
+    }, [navigation]);
+
+    const [cars, setCars] = useState<any[]>([]);
+    const [filteredCars, setFilteredCars] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
-    const [expandedBookingId, setExpandedBookingId] = useState(null); // State to track expanded bookings
+    const [error, setError] = useState<string | null>(null);
 
-    const fetchUserData = async () => {
-        try {
-            const name = await AsyncStorage.getItem('userName');
-            setUserName(name || 'User');
+    // Filters
+    const [minPrice, setMinPrice] = useState(0);
+    const [maxPrice, setMaxPrice] = useState(250);
+    const [minSeats, setMinSeats] = useState(2);
+    const [maxSeats, setMaxSeats] = useState(8);
+    const [transmissionType, setTransmissionType] = useState('All');
 
-            const bookings = await getUserBooking();
-            console.log(bookings)
-            setBookings(bookings); // Set all bookings
-        } catch (error) {
-            console.error('Error loading user data or booking:', error);
-        } finally {
-            setLoading(false);
-        }
-    };
+    useEffect(() => {
+        const fetchCars = async () => {
+            try {
+                const data = await getCars();
+                setCars(data);
+                setFilteredCars(data);
+            } catch (err) {
+                setError('Error fetching car list.');
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchCars();
+    }, []);
 
-    // Refetch data every time the Home screen is focused
-    useFocusEffect(
-        useCallback(() => {
-            setLoading(true); // Set loading state
-            fetchUserData();   // Re-fetch data when the screen is focused
-        }, [])
-    );
+    const applyFilters = () => {
+        const filtered = cars.filter(car => {
+            return (
+                car.availability = true &&
+                car.price >= minPrice &&
+                car.price <= maxPrice &&
+                car.number_of_seats >= minSeats &&
+                car.number_of_seats <= maxSeats &&
+                (transmissionType === 'All' || car.type === transmissionType)
+            );
+        });
 
-    const toggleBookingDetails = (bookingId) => {
-        if (expandedBookingId === bookingId) {
-            setExpandedBookingId(null); // Collapse if already expanded
-        } else {
-            setExpandedBookingId(bookingId); // Expand the clicked booking
-        }
+        setFilteredCars(filtered);
     };
 
     if (loading) {
         return <ActivityIndicator size="large" />;
     }
 
-    return (
-        <View style={styles.container}>
-            <Header />
-            <Text style={styles.title}>Welcome, {userName}!</Text>
-            <Text style={styles.subtitle}>Find your perfect car now!</Text>
-            <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+    if (error) {
+        return <Text>{error}</Text>;
+    }
 
-            <TouchableOpacity style={styles.bigButton} onPress={() => navigation.navigate('CarList')}>
-                <View style={styles.bigButtonContent}>
-                    <Text style={styles.buttonMainText}>Available Cars</Text>
-                    <Text style={styles.buttonSubText}>Long term, Short term</Text>
-                    <View style={styles.arrowContainer}>
-                        <Text style={styles.arrowText}>→</Text>
+    const renderItem = ({ item }: { item: any }) => (
+        <TouchableOpacity
+            activeOpacity={0.5}
+            onPress={() => navigation.navigate('CarDetails', { carId: item._id })}>
+            <View style={styles.card}>
+                <Image
+                    source={getImage(item.image)}
+                    style={styles.carImage}
+                    resizeMode="contain"
+                />
+                <View style={styles.carInfo}>
+                    <Text style={styles.model}>{item.model}</Text>
+                    <Text style={styles.brand}>{item.brand}</Text>
+                    <View style={styles.pricetag}>
+                        <Text style={styles.price}>${item.price}</Text>
+                        <Text style={styles.pricePerDay}> per day</Text>
                     </View>
                 </View>
-            </TouchableOpacity>
+            </View>
+        </TouchableOpacity>
+    );
+    return (
+        <SafeAreaView style={styles.safeArea}>
+            {/* Top Bar */}
+            <View style={styles.topBar}>
+                <Image
+                    source={require('../assets/LogoBilway_White.png')} // Change to png logo
+                    style={styles.logo}
+                />
 
-            {/* Display all bookings */}
-            <Text style={styles.title}>Booked cars:</Text>
-            {bookings.length > 0 ? (
-                bookings.map((booking) => (
-                    <View key={booking._id} style={styles.carCard}>
-                        <TouchableOpacity onPress={() => toggleBookingDetails(booking._id)}>
-                            <View style={styles.carHeader}>
-                                <Image source={getImageForCar(booking.car_id.image)} style={styles.carImage} />
-                                <View style={styles.carDetails}>
-                                    <Text style={styles.carName}>{booking.car_id.model}</Text>
-                                    <Text style={styles.carBrand}>{booking.car_id.brand}</Text>
-                                </View>
-                                {/* Arrow to indicate expand/collapse */}
-                                <Text style={styles.arrow}>{expandedBookingId === booking._id ? '↑' : '↓'}</Text>
-                            </View>
-                        </TouchableOpacity>
+                <View style={styles.rightButtons}>
+                    <TouchableOpacity style={styles.topBarIcon} onPress={() => navigation.navigate('Support')}>
+                        <Icon name="help-circle-outline" size={30} color="#FFFFFF" />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.topBarIcon} onPress={() => navigation.navigate('Notifications')}>
+                        <Icon name="notifications-outline" size={30} color="#FFFFFF" />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.topBarIcon} onPress={() => navigation.navigate('User')}>
+                        <Icon name="person-outline" size={30} color="#FFFFFF" />
+                    </TouchableOpacity>
+                </View>
+            </View>
 
-                        {/* If this booking is expanded, show more details */}
-                        {expandedBookingId === booking._id && (
-                            <View style={styles.expandedDetails}>
-                                <Text style={styles.detailText}>
-                                    Pickup Location: {booking.pickup_location_id.address}
-                                </Text>
-                                <Text style={styles.detailText}>
-                                    Rental Start: {new Date(booking.rental_start_date).toLocaleDateString()}
-                                </Text>
-                                <Text style={styles.detailText}>
-                                    Rental End: {new Date(booking.rental_end_date).toLocaleDateString()}
-                                </Text>
-                                {/*<TouchableOpacity*/}
-                                {/*    onPress={() => navigation.navigate('BookingConfirmation', { carId: booking.car_id._id })}*/}
-                                {/*>*/}
-                                {/*    <Text style={styles.garageLink}>View Booking</Text>*/}
-                                {/*</TouchableOpacity>*/}
-                            </View>
-                        )}
-                    </View>
-                ))
-            ) : (
-                <Text>No cars booked currently.</Text>
-            )}
-            </ScrollView>
-        </View>
+            <View style={styles.container}>
+                <FilterComponent
+                    minPrice={minPrice}
+                    setMinPrice={setMinPrice}
+                    maxPrice={maxPrice}
+                    setMaxPrice={setMaxPrice}
+                    minSeats={minSeats}
+                    setMinSeats={setMinSeats}
+                    maxSeats={maxSeats}
+                    setMaxSeats={setMaxSeats}
+                    transmissionType={transmissionType}
+                    setTransmissionType={setTransmissionType}
+                    applyFilters={applyFilters}
+                />
+
+                <FlatList
+                    data={filteredCars}
+                    renderItem={renderItem}
+                    keyExtractor={(item) => item._id.toString()}
+                    numColumns={2}
+                    columnWrapperStyle={styles.row}
+                    contentContainerStyle={styles.listContainer}
+                />
+            </View>
+            
+        </SafeAreaView>
     );
 };
 
 const styles = StyleSheet.create({
-    container: {
+    safeArea: {
         flex: 1,
-        backgroundColor: '#f4f4f4',
-        paddingHorizontal: 20,
-        paddingTop: 130,
+        backgroundColor: '#1C146B',
     },
-    scrollViewContainer: {
-        paddingVertical: 10,
+    container: {
+        backgroundColor: '#F6F5FA',
+        flex: 1,
+        padding: 10,
     },
-    title: {
-        fontSize: 28,
-        fontWeight: 'bold',
-        marginBottom: 10,
-        color: '#333',
-    },
-    subtitle: {
-        fontSize: 18,
-        color: '#666',
-        marginBottom: 20,
-    },
-    carCard: {
-        backgroundColor: '#fff',
-        borderRadius: 10,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 3,
-        elevation: 2,
-        marginBottom: 20,
-        padding: 15,
-    },
-    carHeader: {
+    topBar: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
+        paddingHorizontal: 20,
+        paddingVertical: 18,
+        backgroundColor: '#1C146B',
+        borderBottomWidth: 1,
+        borderBottomColor: '#ddd',
     },
-    carImage: {
-        width: 100,
-        height: 60,
-        borderRadius: 10,
-        marginRight: 15,
+    logo: {
+        width: width*0.24,
+        height: width*0.12,
     },
-    carDetails: {
-        flex: 1,
+    rightButtons: {
+        flexDirection: 'row',
     },
-    carName: {
-        fontSize: 18,
+
+    topBarButton: {
+        backgroundColor: '#5e68c4',
+        borderRadius: 20,
+        paddingVertical: 5,
+        paddingHorizontal: 15,
+    },
+    topBarIcon: {
+        paddingVertical: 5,
+        paddingHorizontal: 10,
+    },
+    topBarButtonText: {
+        color: '#FFFFFF',
+        fontSize: 14,
         fontWeight: 'bold',
-    },
-    carBrand: {
-        fontSize: 14,
-        color: '#888',
-        marginBottom: 5,
-    },
-    arrow: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        color: '#6836F5',
-    },
-    expandedDetails: {
-        marginTop: 10,
-    },
-    detailText: {
-        fontSize: 14,
-        color: '#555',
-    },
-    garageLink: {
-        fontSize: 14,
-        color: '#6836F5',
-        textDecorationLine: 'underline',
-        marginTop: 10,
-    },
-    bigButton: {
-        backgroundColor: '#6836F5',
-        paddingVertical: 25,
-        borderRadius: 15,
-        marginBottom: 20,
-        width: '100%',
-        justifyContent: 'center',
-        alignItems: 'center',
+        textAlign: 'center',
     },
     bigButtonContent: {
-        flexDirection: 'column',
+        flexDirection: 'column',  // Change this to column for a vertical layout
         justifyContent: 'center',
-        alignItems: 'flex-start',
+        alignItems: 'flex-start',  // Center the text horizontally
         width: '100%',
     },
     buttonMainText: {
@@ -235,13 +225,64 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         borderRadius: 50,
         padding: 10,
-        alignSelf: 'flex-end',
+        alignSelf: "flex-end",
         marginRight: 20,
     },
     arrowText: {
         color: '#6836F5',
         fontSize: 20,
         fontWeight: 'bold',
+    },
+    listContainer: {
+        marginTop: -10,
+    },
+    row: {
+        justifyContent: 'space-between',
+    },
+    card: {
+        margin: 7,
+        backgroundColor: '#FFFFFF',
+        borderRadius: 10,
+        padding: 10,
+        width: (width / 2) - 23,
+        alignItems: 'center',
+        shadowRadius: 4,
+    },
+    carImage: {
+        width: '100%',
+        height: 120,
+        borderRadius: 10,
+        marginBottom: 10,
+    },
+    carInfo: {
+        alignItems: 'center',
+    },
+    model: {
+        fontSize: 15,
+        fontWeight: 'bold',
+        color: '#111317',
+        marginBottom: 4,
+    },
+    brand: {
+        fontSize: 14,
+        color: '#2F3035',
+        marginBottom: 8,
+    },
+    pricetag: {
+        backgroundColor: '#5e68c4',
+        height: 35,
+        padding: 6,
+        borderRadius: 20,
+        flexDirection: 'row',
+        alignItems: "center",
+    },
+    price: {
+        fontSize: 15,
+        fontWeight: 'bold',
+        color: '#F6F5FA',
+    },
+    pricePerDay: {
+        color: '#F6F5FA',
     },
 });
 

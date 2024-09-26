@@ -7,7 +7,7 @@ import Animated, {
     withSpring,
 } from 'react-native-reanimated';
 import { getCarDetails } from '../apiService';
-import MapComponent from '../MapComponent';
+import MapComponent from '../components/MapComponent';
 import {Ionicons} from "@expo/vector-icons";
 
 const { width, height } = Dimensions.get('window');
@@ -179,16 +179,8 @@ const CarDetailsScreen = ({ route, navigation }) => {
 
 const styles = StyleSheet.create({
     container: {
+        backgroundColor: '#1C146B',
         flex: 1,
-    },
-    backButton: {
-        position: 'absolute',
-        top: 40,
-        left: 20,
-        zIndex: 10, // Ensure the back button is on top of everything
-        backgroundColor: '#00000080', // Semi-transparent background
-        padding: 10,
-        borderRadius: 20,
     },
     mapBackground: {
         flex: 1,
@@ -199,7 +191,7 @@ const styles = StyleSheet.create({
     },
     mainCard: {
         flex: 1,
-        backgroundColor: '#6836F5',
+        backgroundColor: '#5e68c4',
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
         position: 'absolute',
@@ -219,7 +211,7 @@ const styles = StyleSheet.create({
         color: '#FFFFFF',
     },
     brandContainer: {
-        backgroundColor: '#FFFFFF',
+        backgroundColor: '#1c146b',
         padding: 9,
         borderRadius: 25,
         marginTop: 5,
@@ -228,7 +220,7 @@ const styles = StyleSheet.create({
     },
     brandName: {
         fontSize: 16,
-        color: '#6836F5',
+        color: '#F6F5FA',
         fontWeight: '600',
     },
     carImage: {
@@ -293,6 +285,29 @@ const styles = StyleSheet.create({
         color: '#000000',
         marginTop: 4,
     },
+    pricetagContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginTop: 20,
+        paddingRight: 20,
+    },
+    pricetag: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#5e68c4',
+        padding: 10,
+        borderRadius: 20,
+    },
+    price: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#FFFFFF',
+    },
+    pricePerDay: {
+        color: '#FFFFFF',
+        marginLeft: 5,
+    },
     footerContainer: {
         backgroundColor: '#FFFFFF',
         paddingHorizontal: 20,
@@ -330,8 +345,8 @@ const styles = StyleSheet.create({
         marginLeft: 5,
     },
     footerButtonContainer: {
-        backgroundColor: '#6836F5',
-        borderRadius: 30,
+        backgroundColor: '#380096',
+        borderRadius: 20,
         paddingVertical: 15,
         paddingHorizontal: 30,
     },
@@ -340,6 +355,15 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
         textAlign: 'center',
+    },
+    backButton: {
+        position: 'absolute',
+        top: 40,
+        left: 20,
+        zIndex: 10, // Ensure the back button is on top of everything
+        backgroundColor: '#00000080', // Semi-transparent background
+        padding: 10,
+        borderRadius: 20,
     },
 });
 
