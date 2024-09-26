@@ -3,11 +3,12 @@ const mongoose = require('mongoose');
 const BookingSchema = new mongoose.Schema({
     user_id: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+        ref: 'User',  // Make sure this references the correct User model
         required: true,
     },
     car_id: {
         type: mongoose.Schema.Types.ObjectId,
+        ref: 'Car',  // Ensure this is correctly referencing the Car model
         required: true,
     },
     rental_start_date: {
@@ -20,10 +21,12 @@ const BookingSchema = new mongoose.Schema({
     },
     pickup_location_id: {
         type: mongoose.Schema.Types.ObjectId,
+        ref: 'Location',  // Make sure this references the Location model
         required: true,
     },
     dropoff_location_id: {
         type: mongoose.Schema.Types.ObjectId,
+        ref: 'Location',  // Make sure this references the Location model
         required: true,
     },
     status: {

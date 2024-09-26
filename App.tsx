@@ -36,15 +36,15 @@ const App: React.FC = () => {
       <NavigationContainer>
         <Stack.Navigator initialRouteName="Splash">
           <Stack.Screen name="Splash" component={SplashScreen} options={{ headerShown: false }} />
-          <Stack.Screen name="Login" component={LoginScreen} />
-          <Stack.Screen name="SignUp" component={SignUpScreen} />
-          <Stack.Screen name="Home" component={HomeScreen} />
-          <Stack.Screen name="CarDetails" component={CarDetailsScreen} />
-          <Stack.Screen name="Notifications" component={NotificationsScreen} />
-          <Stack.Screen name="CarList" component={CarListScreen} />
-          <Stack.Screen name="Booking" component={BookingScreen} />
-          <Stack.Screen name="Payment" component={PaymentScreen} />
-          <Stack.Screen name="Confirmation" component={ConfirmationScreen} />
+          <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }}/>
+          <Stack.Screen name="SignUp" component={SignUpScreen} options={{ headerShown: false }}/>
+          <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }}/>
+          <Stack.Screen name="CarDetails" component={CarDetailsScreen} options={{ headerShown: false }}/>
+          <Stack.Screen name="Notifications" component={NotificationsScreen} options={{ headerShown: false }}/>
+          <Stack.Screen name="CarList" component={CarListScreen} options={{ headerShown: false }}/>
+          <Stack.Screen name="Booking" component={BookingScreen} options={{ headerShown: false }}/>
+          <Stack.Screen name="Payment" component={PaymentScreen} options={{ headerShown: false }}/>
+          <Stack.Screen name="Confirmation" component={ConfirmationScreen} options={{ headerShown: false }}/>
         </Stack.Navigator>
       </NavigationContainer>
   );

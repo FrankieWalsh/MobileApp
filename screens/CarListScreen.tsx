@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Image, View, FlatList, Text, TouchableOpacity, StyleSheet, ActivityIndicator, Dimensions } from 'react-native';
 import { getCars } from '../apiService';
 import FilterComponent from '../FilterComponent';
+import Header from "../header/header";
 
 const imageMap = {
     'white-tesla.png': require('../assets/cars/white-tesla.png'),
@@ -101,6 +102,7 @@ const CarListScreen: React.FC = ({ navigation }: any) => {
 
     return (
         <View style={styles.container}>
+            <Header/>
             <FilterComponent
                 minPrice={minPrice}
                 setMinPrice={setMinPrice}
