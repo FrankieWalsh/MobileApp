@@ -14,6 +14,18 @@ router.get('/', async (req, res) => {
     }
 });
 
+router.put('/availability/true', async (req, res) => {
+    try {
+        // Use updateMany to set availability to true for all cars
+        const result = await Car.updateMany({}, { availability: true });
+
+        console.log("All cars' availability updated to true.");
+        res.json({ message: 'All cars availability set to true', result });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
 
 // GET car by ID
 router.get('/:id', async (req, res) => {
