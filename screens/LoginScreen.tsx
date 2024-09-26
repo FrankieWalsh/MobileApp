@@ -128,8 +128,9 @@ const styles = StyleSheet.create({
     },
     input: {
         height: 60,
-        backgroundColor: '#fff',
-        borderRadius: 25,
+        flex: 1,
+        //backgroundColor: '#fff',
+        //borderRadius: 25,
         paddingHorizontal: 15,
         //marginBottom: 20,
         fontSize: 16,
