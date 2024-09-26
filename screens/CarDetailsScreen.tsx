@@ -1,8 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, ScrollView, Image, Dimensions, TouchableOpacity } from 'react-native';
+import {View, Text, StyleSheet, ActivityIndicator, Image, ScrollView, TouchableOpacity, Dimensions} from 'react-native';
+import { PanGestureHandler } from 'react-native-gesture-handler';
+import Animated, {
+    useSharedValue,
+    useAnimatedStyle,
+    withSpring,
+} from 'react-native-reanimated';
 import { getCarDetails } from '../apiService';
+import MapComponent from '../MapComponent';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 const imageMap = {
     'white-tesla.png': require('../assets/cars/white-tesla.png'),
@@ -31,6 +38,9 @@ const CarDetailsScreen = ({ route, navigation }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    const translateY = useSharedValue(0);
+    const maxTranslateY = height * 0.5;
+
     useEffect(() => {
         // Fetch car details from API when component mounts
         const fetchCarDetails = async () => {
@@ -46,6 +56,37 @@ const CarDetailsScreen = ({ route, navigation }) => {
         fetchCarDetails();
     }, [carId]);
 
+    const animatedStyle = useAnimatedStyle(() => {
+        return {
+            transform: [{ translateY: withSpring(translateY.value, { damping: 50 }) }],
+        };
+    });
+
+    const onGestureEvent = (event) => {
+        const newY = event.nativeEvent.translationY;
+
+        if (translateY.value === 0 && newY > 0) {
+            // Allow smooth dragging downwards from the top
+            translateY.value = Math.min(newY, maxTranslateY);
+        } else {
+            // Allow both upward and downward movement within the allowed range
+            translateY.value = Math.max(Math.min(translateY.value + newY, maxTranslateY), 0);
+        }
+    };
+
+
+    const onGestureEnd = (event) => {
+        const finalY = event.nativeEvent.translationY;
+
+        // Snap down if dragged more than halfway, otherwise snap back up
+        if (translateY.value > maxTranslateY / 2) {
+            translateY.value = withSpring(maxTranslateY, { damping: 15, stiffness: 90 });  // Snap fully down
+        } else {
+            translateY.value = withSpring(0, { damping: 15, stiffness: 90 });  // Snap back to the top (initial position)
+        }
+    };
+
+
     if (loading) {
         return <ActivityIndicator size="large" />;
     }
@@ -60,65 +101,74 @@ const CarDetailsScreen = ({ route, navigation }) => {
 
     return (
         <View style={styles.container}>
-            <View style={styles.mapBackground}></View>
-
-            <View style={styles.mainCard}>
-
-                <View style={styles.headerContainer}>
-                    <Text style={styles.modelName}>{car.model}</Text>
-                    <View style={styles.brandContainer}>
-                        <Text style={styles.brandName}>{car.brand}</Text>
-                    </View>
-                </View>
-
-                {car.image && (
-                    <Image
-                        source={getImage(car.image)}
-                        style={styles.carImage}
-                        resizeMode="contain"
-                    />
-                )}
-
-                <View style={styles.detailCard}>
-                    <View style={styles.specificationsContainer}>
-                        <View style={styles.specBox}>
-                            <Text style={styles.specTitle}>{car.type}</Text>
-                        </View>
-                        <View style={styles.specBox}>
-                        <Text style={styles.specTitle}>{car.number_of_seats} seats</Text>
-                        </View>
-                    </View>
-
-                    <Text style={styles.specificationsHeader}>SPECIFICATIONS</Text>
-                    <ScrollView
-                        horizontal={true}
-                        showsHorizontalScrollIndicator={false}
-                        style={styles.specificationsContainer}>
-                        {car.specifications && Object.entries(car.specifications).map(([key, value]) => (
-                            <View key={key} style={styles.specBox}>
-                                <Text style={styles.specificationKey}>{`${key} `}</Text>
-                                <Text style={styles.specificationValue}>{`${value}`}</Text>
-                            </View>
-                        ))}
-                    </ScrollView>
-
-                    <View style={styles.footerContainer}>
-                        <View style={styles.footerPriceTag}>
-                            <Text style={styles.footerPrice}>${car.price}</Text>
-                            <Text style={styles.footerPricePerDay}> per day</Text>
-                        </View>
-
-                        <View>
-                            <TouchableOpacity
-                                onPress={() => navigation.navigate('Booking', { carId: car.id })}
-                                style={styles.footerButtonContainer}
-                            >
-                                <Text style={styles.footerButtonText}>Book Now</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </View>
+            {/* Background map */}
+            <View style={styles.mapBackground}>
+                <MapComponent cars={[car]} />
             </View>
+
+            {/* PanGestureHandler to track dragging */}
+            <PanGestureHandler onGestureEvent={onGestureEvent} onEnded={onGestureEnd}>
+                {/* Main card with animated style */}
+                <Animated.View style={[styles.mainCard, animatedStyle]}>
+                    <View style={styles.headerContainer}>
+                        <Text style={styles.modelName}>{car.model}</Text>
+                        <View style={styles.brandContainer}>
+                            <Text style={styles.brandName}>{car.brand}</Text>
+                        </View>
+                    </View>
+
+                    {/* Car Image */}
+                    {car.image && (
+                        <Image
+                            source={getImage(car.image)}
+                            style={styles.carImage}
+                            resizeMode="contain"
+                        />
+                    )}
+
+                    {/* Car details */}
+                    <View style={styles.detailCard}>
+                        <View style={styles.specificationsContainer}>
+                            <View style={styles.specBox}>
+                                <Text style={styles.specTitle}>{car.type}</Text>
+                            </View>
+                            <View style={styles.specBox}>
+                                <Text style={styles.specTitle}>{car.number_of_seats} seats</Text>
+                            </View>
+                        </View>
+
+                        <Text style={styles.specificationsHeader}>SPECIFICATIONS</Text>
+                        <ScrollView
+                            horizontal={true}
+                            showsHorizontalScrollIndicator={false}
+                            style={styles.specificationsContainer}>
+                            {car.specifications && Object.entries(car.specifications).map(([key, value]) => (
+                                <View key={key} style={styles.specBox}>
+                                    <Text style={styles.specificationKey}>{`${key} `}</Text>
+                                    <Text style={styles.specificationValue}>{`${value}`}</Text>
+                                </View>
+                            ))}
+                        </ScrollView>
+
+                        {/* Footer with price and booking button */}
+                        <View style={styles.footerContainer}>
+                            <View style={styles.footerPriceTag}>
+                                <Text style={styles.footerPrice}>${car.price}</Text>
+                                <Text style={styles.footerPricePerDay}> per day</Text>
+                            </View>
+
+                            <View>
+                                <TouchableOpacity
+                                    onPress={() => navigation.navigate('Booking', { carId: car.id })}
+                                    style={styles.footerButtonContainer}
+                                >
+                                    <Text style={styles.footerButtonText}>Book Now</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </View>
+                </Animated.View>
+            </PanGestureHandler>
         </View>
     );
 };
@@ -178,7 +228,7 @@ const styles = StyleSheet.create({
     },
     detailCard: {
         flex: 1,
-        backgroundColor: '#F6F5FA',
+        backgroundColor: '#f1f0f5',
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
         marginTop: 30,
@@ -230,29 +280,6 @@ const styles = StyleSheet.create({
         color: '#000000',
         marginTop: 4,
     },
-    pricetagContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginTop: 20,
-        paddingRight: 20,
-    },
-    pricetag: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: '#6836F5',
-        padding: 10,
-        borderRadius: 20,
-    },
-    price: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: '#FFFFFF',
-    },
-    pricePerDay: {
-        color: '#FFFFFF',
-        marginLeft: 5,
-    },
     footerContainer: {
         backgroundColor: '#FFFFFF',
         paddingHorizontal: 20,
@@ -263,8 +290,8 @@ const styles = StyleSheet.create({
         bottom: 0,
         width: width,
         minHeight: 90,
-        borderTopLeftRadius: 20,
-        borderTopRightRadius: 20,
+        borderTopLeftRadius: 50,
+        borderTopRightRadius: 50,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: -2 },
         shadowOpacity: 0.1,
@@ -291,7 +318,7 @@ const styles = StyleSheet.create({
     },
     footerButtonContainer: {
         backgroundColor: '#6836F5',
-        borderRadius: 20,
+        borderRadius: 30,
         paddingVertical: 15,
         paddingHorizontal: 30,
     },
