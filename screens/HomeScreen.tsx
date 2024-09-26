@@ -102,11 +102,27 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
     );
     return (
         <View style={styles.container}>
+            {/* Top Bar */}
+            <View style={styles.topBar}>
+                <Image
+                    source={require('../assets/LogoBilway.jpg')} // Change to png logo
+                    style={styles.logo}
+                />
+                <View style={styles.rightButtons}>
+                    <TouchableOpacity onPress={() => navigation.navigate('Support')}>
+                        <Text style={styles.topBarButton}>Support</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigation.navigate('Notifications')}>
+                        <Text style={styles.topBarButton}>Notifications</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigation.navigate('User')}>
+                        <Text style={styles.topBarButton}>User</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+
             <Text style={styles.title}>Available Cars</Text>
-            <Button
-                title="Notifications"
-                onPress={() => navigation.navigate('Notifications')}
-            />
+
             <FilterComponent
                 minPrice={minPrice}
                 setMinPrice={setMinPrice}
@@ -138,6 +154,28 @@ const styles = StyleSheet.create({
         backgroundColor: '#F6F5FA',
         flex: 1,
         padding: 10,
+    },
+    topBar: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingHorizontal: 10,
+        paddingVertical: 15,
+        backgroundColor: '#fff',
+        borderBottomWidth: 1,
+        borderBottomColor: '#ddd',
+    },
+    logo: {
+        width: 100,
+        height: 40,
+    },
+    rightButtons: {
+        flexDirection: 'row',
+    },
+    topBarButton: {
+        marginLeft: 20,
+        fontSize: 16,
+        color: '#007bff',
     },
     title: {
         fontSize: 24,

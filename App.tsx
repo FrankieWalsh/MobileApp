@@ -13,6 +13,8 @@ import ConfirmationScreen from './screens/ConfirmationScreen';
 import LoginScreen from './screens/LoginScreen';
 import SignUpScreen from './screens/SignUpScreen';
 import NotificationsScreen from './screens/NotificationsScreen';
+import SupportScreen from './screens/SupportScreen';
+import UserScreen from './screens/UserScreen';
 
 // Define the type for the Stack Navigator
 export type RootStackParamList = {
@@ -26,6 +28,8 @@ export type RootStackParamList = {
   Booking: undefined;
   Payment: undefined;
   Confirmation: undefined;
+  Support: undefined;
+  User: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -43,6 +47,8 @@ const App: React.FC = () => {
           <Stack.Screen name="Booking" component={BookingScreen} />
           <Stack.Screen name="Payment" component={PaymentScreen} />
           <Stack.Screen name="Confirmation" component={ConfirmationScreen} />
+          <Stack.Screen name="Support" component={SupportScreen} />
+          <Stack.Screen name="User" component={UserScreen} />
         </Stack.Navigator>
       </NavigationContainer>
   );
