@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, ScrollView, Image, Dimensions, TouchableOpacity, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, ActivityIndicator, Image, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
+import { PanGestureHandler } from 'react-native-gesture-handler';
+import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
 import { getCarDetails } from '../apiService';
-import MapComponent from '../components/MapComponent';
+import MapComponent from '../MapComponent';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 const imageMap = {
     'white-tesla.png': require('../assets/cars/white-tesla.png'),
@@ -32,6 +34,9 @@ const CarDetailsScreen = ({ route, navigation }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    const translateY = useSharedValue(0);
+    const maxTranslateY = height * 0.5;
+
     useEffect(() => {
         // Fetch car details from API when component mounts
         const fetchCarDetails = async () => {
@@ -46,6 +51,37 @@ const CarDetailsScreen = ({ route, navigation }) => {
         };
         fetchCarDetails();
     }, [carId]);
+
+    const animatedStyle = useAnimatedStyle(() => {
+        return {
+            transform: [{ translateY: withSpring(translateY.value, { damping: 50 }) }],
+        };
+    });
+
+    const onGestureEvent = (event) => {
+        const newY = event.nativeEvent.translationY;
+
+        if (translateY.value === 0 && newY > 0) {
+            // Allow smooth dragging downwards from the top
+            translateY.value = Math.min(newY, maxTranslateY);
+        } else {
+            // Allow both upward and downward movement within the allowed range
+            translateY.value = Math.max(Math.min(translateY.value + newY, maxTranslateY), 0);
+        }
+    };
+
+
+    const onGestureEnd = (event) => {
+        const finalY = event.nativeEvent.translationY;
+
+        // Snap down if dragged more than halfway, otherwise snap back up
+        if (translateY.value > maxTranslateY / 2) {
+            translateY.value = withSpring(maxTranslateY, { damping: 15, stiffness: 90 });  // Snap fully down
+        } else {
+            translateY.value = withSpring(0, { damping: 15, stiffness: 90 });  // Snap back to the top (initial position)
+        }
+    };
+
 
     if (loading) {
         return <ActivityIndicator size="large" />;
@@ -88,7 +124,7 @@ const CarDetailsScreen = ({ route, navigation }) => {
                             <Text style={styles.specTitle}>{car.type}</Text>
                         </View>
                         <View style={styles.specBox}>
-                        <Text style={styles.specTitle}>{car.number_of_seats} seats</Text>
+                            <Text style={styles.specTitle}>{car.number_of_seats} seats</Text>
                         </View>
                     </View>
 
@@ -182,7 +218,7 @@ const styles = StyleSheet.create({
     },
     detailCard: {
         flex: 1,
-        backgroundColor: '#F6F5FA',
+        backgroundColor: '#f1f0f5',
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
         marginTop: 30,
@@ -267,8 +303,8 @@ const styles = StyleSheet.create({
         bottom: 0,
         width: width,
         minHeight: 90,
-        borderTopLeftRadius: 20,
-        borderTopRightRadius: 20,
+        borderTopLeftRadius: 50,
+        borderTopRightRadius: 50,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: -2 },
         shadowOpacity: 0.1,

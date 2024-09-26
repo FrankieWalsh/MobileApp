@@ -1,5 +1,5 @@
-import { View, Text, Image, StyleSheet, TextInput, Alert, TouchableOpacity } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Button, StyleSheet, TextInput, Alert, TouchableOpacity, Image, SafeAreaView } from 'react-native';
 import { loginUser } from '../apiService';
 import { StackNavigationProp } from '@react-navigation/stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';

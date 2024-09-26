@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, StyleSheet, Alert, TextInput, ActivityIndicator } from 'react-native';
-import { bookCar, getLocations } from '../apiService';
+import { View, Text, Button, StyleSheet, Alert, ActivityIndicator } from 'react-native';
+import CalendarPicker from 'react-native-calendar-picker';
+import { bookCar, getLocations, getCarDetails } from '../apiService';
 import RNPickerSelect from 'react-native-picker-select';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Header from "../header/header";
 
 const BookingScreen = ({ route, navigation }) => {
     const { carId } = route.params;
-    const [startDate, setStartDate] = useState(new Date());
-    const [endDate, setEndDate] = useState(new Date());
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
     const [pickupLocation, setPickupLocation] = useState('');
     const [dropOffLocation, setDropOffLocation] = useState('');
-    const [showStartDatePicker, setShowStartDatePicker] = useState(false);
-    const [showEndDatePicker, setShowEndDatePicker] = useState(false);
     const [locations, setLocations] = useState([]);
     const [loading, setLoading] = useState(true);
     const [userId, setUserId] = useState('');
@@ -27,20 +26,32 @@ const BookingScreen = ({ route, navigation }) => {
         fetchUserId();
     }, []);
 
+    // Fetch car details and location when the component mounts
     useEffect(() => {
-        const fetchLocations = async () => {
+        const fetchCarDetailsAndLocations = async () => {
             try {
+                // Get the car details (which includes the location_id)
+                const carDetails = await getCarDetails(carId);
+                const carLocationId = carDetails.location_id;
+
+                // Fetch all locations, and set the car's location as the pickup location
                 const fetchedLocations = await getLocations();
+                const carLocation = fetchedLocations.find(loc => loc._id === carLocationId);
+
+                if (carLocation) {
+                    setPickupLocation(carLocation._id); // Automatically set the pickup location
+                }
                 setLocations(fetchedLocations.map(loc => ({ label: loc.address, value: loc._id })));
+
             } catch (error) {
-                Alert.alert('Error', 'Unable to fetch locations.');
+                Alert.alert('Error', 'Unable to fetch car or location details.');
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchLocations();
-    }, []);
+        fetchCarDetailsAndLocations();
+    }, [carId]);
 
     const handleBooking = async () => {
         if (!userId) {
@@ -49,8 +60,8 @@ const BookingScreen = ({ route, navigation }) => {
         }
 
         const bookingDetails = {
-            rentalStartDate: startDate.toISOString(),
-            rentalEndDate: endDate.toISOString(),
+            rentalStartDate: startDate ? startDate.toISOString() : '',
+            rentalEndDate: endDate ? endDate.toISOString() : '',
             pickupLocation,
             dropOffLocation,
             userId
@@ -59,8 +70,7 @@ const BookingScreen = ({ route, navigation }) => {
         try {
             await bookCar(carId, bookingDetails);
             Alert.alert('Booking Confirmed', 'Your car has been booked successfully.');
-            // navigation.navigate('BookingConfirmation', { carId });
-            navigation.navigate('Home')
+            navigation.navigate('Home');
         } catch (error) {
             Alert.alert('Booking Failed', 'There was an error processing your booking.');
         }
@@ -72,50 +82,41 @@ const BookingScreen = ({ route, navigation }) => {
 
     return (
         <View style={styles.container}>
-            <Text>Start Date:</Text>
-            <Button title={startDate.toDateString()} onPress={() => setShowStartDatePicker(true)} />
-            {showStartDatePicker && (
-                <DateTimePicker
-                    value={startDate}
-                    mode="date"
-                    display="default"
-                    onChange={(event, selectedDate) => {
-                        setShowStartDatePicker(false);
-                        if (selectedDate) {
-                            setStartDate(selectedDate);
-                        }
-                    }}
-                />
-            )}
+            <Header/>
+            <Text style={styles.heading}>Select Rental Dates</Text>
 
-            <Text>End Date:</Text>
-            <Button title={endDate.toDateString()} onPress={() => setShowEndDatePicker(true)} />
-            {showEndDatePicker && (
-                <DateTimePicker
-                    value={endDate}
-                    mode="date"
-                    display="default"
-                    onChange={(event, selectedDate) => {
-                        setShowEndDatePicker(false);
-                        if (selectedDate) {
-                            setEndDate(selectedDate);
-                        }
-                    }}
+            <View style={styles.calendarContainer}>
+                <CalendarPicker
+                    startFromMonday={true}
+                    allowRangeSelection={true}
+                    minDate={new Date()} // Disable dates before today
+                    selectedDayColor="#6836F5" // Set the selected date color (same as in image)
+                    selectedDayTextColor="#FFFFFF" // Set the selected text color
+                    selectedRangeStyle={styles.selectedRangeStyle} // Style for the date range
+                    todayBackgroundColor="#E5E5E5" // Color for today's date
+                    selectedRangeStartStyle={styles.selectedRangeStartStyle} // Rounded start date
+                    selectedRangeEndStyle={styles.selectedRangeEndStyle} // Rounded end date
+                    textStyle={styles.calendarText} // General text style for dates
                 />
-            )}
+            </View>
 
-            <Text>Pickup Location:</Text>
+            <Text>Pickup Location (Pre-filled):</Text>
             <RNPickerSelect
-                onValueChange={(value) => setPickupLocation(value)}
+                value={pickupLocation} // Pre-fill the car's pickup location
                 items={locations}
                 placeholder={{ label: 'Select a pickup location', value: null }}
+                style={pickerSelectStyles}
+                disabled={true} // Disable the pickup location selector
+                onValueChange={() => {}} // Provide an empty function to avoid the warning
             />
+
 
             <Text>Drop-off Location:</Text>
             <RNPickerSelect
                 onValueChange={(value) => setDropOffLocation(value)}
                 items={locations}
                 placeholder={{ label: 'Select a drop-off location', value: null }}
+                style={pickerSelectStyles}
             />
 
             <Button title="Confirm Booking" onPress={handleBooking} />
@@ -126,13 +127,88 @@ const BookingScreen = ({ route, navigation }) => {
 const styles = StyleSheet.create({
     container: {
         padding: 16,
+        backgroundColor: '#f4f4f9', // Light background to enhance contrast
+        flex: 1,
     },
-    input: {
+    heading: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 20,
+        color: '#333',
+        textAlign: 'center', // Center align the heading
+    },
+    calendarContainer: {
+        backgroundColor: '#ECECFF', // Light purple/blue background to contrast with main background
+        padding: 10,
+        borderRadius: 20, // Rounded corners for a modern look
+        marginTop: 70,
+    },
+    dateContainer: {
+        marginTop: 16,
+        marginBottom: 20,
+    },
+    calendarText: {
+        color: '#333', // General text color for the calendar
+        fontWeight: 'bold', // Make the calendar text bold
+    },
+    selectedRangeStyle: {
+        backgroundColor: '#669cf2', // Color for the selected date range
+    },
+    selectedRangeStartStyle: {
+        backgroundColor: '#6836F5',
+        borderTopLeftRadius: 15, // Rounded corners for start date
+        borderBottomLeftRadius: 15,
+    },
+    selectedRangeEndStyle: {
+        backgroundColor: '#6836F5',
+        borderTopRightRadius: 15, // Rounded corners for end date
+        borderBottomRightRadius: 15,
+    },
+    headerWrapperStyle: {
+        backgroundColor: '#ECECFF', // Matching the header background with the overall design
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        paddingVertical: 10, // Add vertical padding for space around the text
+        paddingHorizontal: 10, // Adjust horizontal padding to reduce background extension
+        maxWidth: '95%', // Shrink the header horizontally (adjust as needed)
+        alignSelf: 'center', // Center the header within the calendar
+        overflow: 'hidden', // Ensure the content doesn't overflow
+    },
+
+
+
+
+    arrowStyle: {
+        fontSize: 24,
+        color: '#6836F5', // Arrow color to match the selected date color
+    },
+});
+
+// Picker styles to make the location dropdown match the calendar style
+const pickerSelectStyles = StyleSheet.create({
+    inputIOS: {
+        fontSize: 16,
+        paddingVertical: 12,
+        paddingHorizontal: 10,
         borderWidth: 1,
-        borderColor: '#ccc',
-        padding: 8,
-        marginBottom: 12,
-        borderRadius: 4,
+        borderColor: 'gray',
+        borderRadius: 8,
+        color: 'black',
+        paddingRight: 30, // to ensure the text is not covered by the icon
+        marginBottom: 10,
+        backgroundColor: '#fff',
+    },
+    inputAndroid: {
+        fontSize: 16,
+        paddingVertical: 8,
+        paddingHorizontal: 10,
+        borderWidth: 1,
+        borderColor: 'gray',
+        borderRadius: 8,
+        color: 'black',
+        paddingRight: 30, // to ensure the text is not covered by the icon
+        marginBottom: 10,
+        backgroundColor: '#fff',
     },
 });
 

@@ -204,9 +204,35 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         textAlign: 'center',
     },
-    title: {
-        fontSize: 24,
-        marginBottom: 20,
+    bigButtonContent: {
+        flexDirection: 'column',  // Change this to column for a vertical layout
+        justifyContent: 'center',
+        alignItems: 'flex-start',  // Center the text horizontally
+        width: '100%',
+    },
+    buttonMainText: {
+        fontSize: 20,
+        color: '#fff',
+        fontWeight: 'bold',
+        marginLeft: 20,
+    },
+    buttonSubText: {
+        padding: 10,
+        fontSize: 14,
+        color: '#ddd',
+        marginLeft: 12,
+    },
+    arrowContainer: {
+        backgroundColor: '#fff',
+        borderRadius: 50,
+        padding: 10,
+        alignSelf: "flex-end",
+        marginRight: 20,
+    },
+    arrowText: {
+        color: '#6836F5',
+        fontSize: 20,
+        fontWeight: 'bold',
     },
     listContainer: {
         marginTop: -10,
