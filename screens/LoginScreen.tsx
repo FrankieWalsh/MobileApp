@@ -1,65 +1,40 @@
-import React, { useState } from 'react';
-import { View, Text, Button, StyleSheet, TextInput, Alert } from 'react-native';
-import { loginUser } from '../apiService';
-import { StackNavigationProp } from '@react-navigation/stack';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import React, {useEffect } from 'react';
 
-type RootStackParamList = {
-    Login: undefined;
-    Home: undefined;
-    SignUp: undefined;
-};
-
-type LoginScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
-
-type Props = {
-    navigation: LoginScreenNavigationProp;
-};
-
-const LoginScreen: React.FC<Props> = ({ navigation }) => {
-    const [email, setEmail] = useState<string>('');
-    const [password, setPassword] = useState<string>('');
-
-    const handleLogin = async () => {
-        if (!email || !password) {
-            Alert.alert('Error', 'Please fill in all fields');
-            return;
-        }
-
-        try {
-            const response = await loginUser(email, password);
-
-            if (response.token) {
-                await AsyncStorage.setItem('userId', response.userId);
-
-                Alert.alert('Success', 'Login successful');
-                navigation.navigate('Home');
-            }
-        } catch (error) {
-            Alert.alert('Error', 'Invalid login credentials');
-        }
-    };
-
+const LoginScreen = ({ navigation }) => {
+    useEffect(() => {
+        navigation.setOptions({
+            headerShown: false, // Disable header
+        });
+    }, [navigation]);
+    
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Login</Text>
-            <TextInput
-                style={styles.input}
-                placeholder="Email"
-                value={email}
-                onChangeText={setEmail}
+
+            <TextInput 
+                style={styles.input} 
+                placeholder="Email" 
+                placeholderTextColor="#aaa"
                 keyboardType="email-address"
                 autoCapitalize="none"
             />
-            <TextInput
-                style={styles.input}
-                placeholder="Password"
+
+            <TextInput 
+                style={styles.input} 
+                placeholder="Password" 
+                placeholderTextColor="#aaa"
                 secureTextEntry={true}
-                value={password}
-                onChangeText={setPassword}
+                autoCapitalize="none"
             />
-            <Button title="Login" onPress={handleLogin} />
-            <Button title="Sign Up" onPress={() => navigation.navigate('SignUp')} />
+
+            <TouchableOpacity style={styles.button} onPress={() => navigation.replace('Home')}>
+                <Text style={styles.buttonText}>Login</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.signUpButton} onPress={() => navigation.navigate('SignUp')}>
+                <Text style={styles.signUpText}>Sign Up</Text>
+            </TouchableOpacity>
         </View>
     );
 };
@@ -67,19 +42,48 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: '#1C146B', 
         justifyContent: 'center',
-        paddingHorizontal: 20,
+        paddingHorizontal: 30,
     },
     title: {
-        fontSize: 28,
-        marginBottom: 20,
+        fontSize: 32,
+        fontWeight: 'bold',
+        color: '#FFFFFF', 
+        textAlign: 'center',
+        marginBottom: 40,
     },
     input: {
-        height: 40,
-        borderColor: 'gray',
-        borderWidth: 1,
+        height: 50,
+        backgroundColor: '#fff',
+        borderRadius: 25,
+        paddingHorizontal: 15,
         marginBottom: 20,
-        paddingHorizontal: 10,
+        fontSize: 16,
+        color: '#333',
+    },
+    button: {
+        backgroundColor: '#5e68c4', 
+        paddingVertical: 15,
+        borderRadius: 25,
+        alignItems: 'center',
+        marginBottom: 10,
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+    signUpButton: {
+        paddingVertical: 15,
+        borderRadius: 25,
+        alignItems: 'center',
+        borderColor: '#fff',
+        borderWidth: 1,
+    },
+    signUpText: {
+        color: '#fff',
+        fontSize: 16,
     },
 });
 
