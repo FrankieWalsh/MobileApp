@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, FlatList } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const notifications = [
     { id: '1', message: 'Your booking is confirmed!' },
@@ -8,6 +9,7 @@ const notifications = [
 
 const NotificationsScreen = () => {
     return (
+        <SafeAreaView>
         <FlatList
             data={notifications}
             renderItem={({ item }) => (
@@ -18,6 +20,7 @@ const NotificationsScreen = () => {
             keyExtractor={item => item.id}
             contentContainerStyle={styles.container}
         />
+        </SafeAreaView>
     );
 };
 
