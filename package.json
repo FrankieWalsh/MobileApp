@@ -10,8 +10,6 @@
   },
   "dependencies": {
     "@react-native-assets/slider": "^7.2.1",
-    "@react-native-community/slider": "4.5.2",
-    "@react-native-picker/picker": "^2.8.1",
     "@react-native-async-storage/async-storage": "^2.0.0",
     "@react-native-community/datetimepicker": "8.0.1",
     "@react-native-community/slider": "4.5.2",
@@ -27,8 +25,7 @@
     "react-native": "^0.75.3",
     "react-native-date-picker": "^5.0.7",
     "react-native-fast-image": "^8.6.3",
-    "react-native-picker-select": "^9.3.1"
-    "react-native": "^0.75.3",
+    "react-native-picker-select": "^9.3.1",
     "react-native-range-slider": "^0.1.2",
     "react-native-range-slider-expo": "^1.4.3"
   },
