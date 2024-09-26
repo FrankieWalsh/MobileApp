@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
     },
     mainCard: {
         flex: 1,
-        backgroundColor: '#6836F5',
+        backgroundColor: '#5e68c4',
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
         position: 'absolute',
@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
         color: '#FFFFFF',
     },
     brandContainer: {
-        backgroundColor: '#FFFFFF',
+        backgroundColor: '#1c146b',
         padding: 9,
         borderRadius: 25,
         marginTop: 5,
@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
     },
     brandName: {
         fontSize: 16,
-        color: '#6836F5',
+        color: '#F6F5FA',
         fontWeight: '600',
     },
     carImage: {
@@ -240,7 +240,7 @@ const styles = StyleSheet.create({
     pricetag: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#6836F5',
+        backgroundColor: '#5e68c4',
         padding: 10,
         borderRadius: 20,
     },
@@ -290,7 +290,7 @@ const styles = StyleSheet.create({
         marginLeft: 5,
     },
     footerButtonContainer: {
-        backgroundColor: '#6836F5',
+        backgroundColor: '#380096',
         borderRadius: 20,
         paddingVertical: 15,
         paddingHorizontal: 30,

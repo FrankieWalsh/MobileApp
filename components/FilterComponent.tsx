@@ -17,18 +17,18 @@ interface FilterComponentProps {
 }
 
 const FilterComponent: React.FC<FilterComponentProps> = ({
-                                                             minPrice,
-                                                             setMinPrice,
-                                                             maxPrice,
-                                                             setMaxPrice,
-                                                             minSeats,
-                                                             setMinSeats,
-                                                             maxSeats,
-                                                             setMaxSeats,
-                                                             transmissionType,
-                                                             setTransmissionType,
-                                                             applyFilters,
-                                                         }) => {
+    minPrice,
+    setMinPrice,
+    maxPrice,
+    setMaxPrice,
+    minSeats,
+    setMinSeats,
+    maxSeats,
+    setMaxSeats,
+    transmissionType,
+    setTransmissionType,
+    applyFilters,
+}) => {
     const [showFilters, setShowFilters] = useState(false);
     const [dropdownVisible, setDropdownVisible] = useState(false);
 
@@ -92,8 +92,8 @@ const FilterComponent: React.FC<FilterComponentProps> = ({
                             minimumRange={10}
                             crossingAllowed={false}
                             outboundColor='lightgrey'
-                            inboundColor='#6836F5'
-                            thumbTintColor='#6836F5'
+                            inboundColor='#1c146b'
+                            thumbTintColor='#5e68c4'
                             trackHeight={7}
                             thumbSize={25}
                             slideOnTap={true}
@@ -115,8 +115,8 @@ const FilterComponent: React.FC<FilterComponentProps> = ({
                             minimumRange={0}
                             crossingAllowed={false}
                             outboundColor='lightgrey'
-                            inboundColor='#6836F5'
-                            thumbTintColor='#6836F5'
+                            inboundColor='#1c146b'
+                            thumbTintColor='#5e68c4'
                             trackHeight={7}
                             thumbSize={25}
                             slideOnTap={true}
@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
         padding: 10,
     },
     filterButton: {
-        backgroundColor: '#6836F5',
+        backgroundColor: '#380096',
         padding: 10,
         marginHorizontal: -3,
         borderRadius: 5,
@@ -220,7 +220,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#f0f0f0',
         borderRadius: 5,
         borderWidth: 1,
-        borderColor: '#6836F5',
+        borderColor: '#380096',
         marginBottom: 10,
     },
     dropdownText: {
@@ -230,7 +230,7 @@ const styles = StyleSheet.create({
     dropdown: {
         backgroundColor: '#fff',
         borderRadius: 5,
-        borderColor: '#6836F5',
+        borderColor: '#380096',
         borderWidth: 1,
         paddingVertical: 10,
         marginBottom: 10,

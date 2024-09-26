@@ -101,50 +101,53 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
         </TouchableOpacity>
     );
     return (
-        <View style={styles.container}>
+        <View>
             {/* Top Bar */}
             <View style={styles.topBar}>
                 <Image
                     source={require('../assets/LogoBilway.jpg')} // Change to png logo
                     style={styles.logo}
                 />
+
+                {/* Put Icons instead of text */}
                 <View style={styles.rightButtons}>
-                    <TouchableOpacity onPress={() => navigation.navigate('Support')}>
-                        <Text style={styles.topBarButton}>Support</Text>
+                    <TouchableOpacity style={styles.topBarButton} onPress={() => navigation.navigate('Support')}>
+                        <Text style={styles.topBarButtonText}>Support</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => navigation.navigate('Notifications')}>
-                        <Text style={styles.topBarButton}>Notifications</Text>
+                    <TouchableOpacity style={styles.topBarButton} onPress={() => navigation.navigate('Notifications')}>
+                        <Text style={styles.topBarButtonText}>Notifications</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => navigation.navigate('User')}>
-                        <Text style={styles.topBarButton}>User</Text>
+                    <TouchableOpacity style={styles.topBarButton} onPress={() => navigation.navigate('User')}>
+                        <Text style={styles.topBarButtonText}>User</Text>
                     </TouchableOpacity>
                 </View>
             </View>
 
-            <Text style={styles.title}>Available Cars</Text>
+            <View style={styles.container}>
+                <FilterComponent
+                    minPrice={minPrice}
+                    setMinPrice={setMinPrice}
+                    maxPrice={maxPrice}
+                    setMaxPrice={setMaxPrice}
+                    minSeats={minSeats}
+                    setMinSeats={setMinSeats}
+                    maxSeats={maxSeats}
+                    setMaxSeats={setMaxSeats}
+                    transmissionType={transmissionType}
+                    setTransmissionType={setTransmissionType}
+                    applyFilters={applyFilters}
+                />
 
-            <FilterComponent
-                minPrice={minPrice}
-                setMinPrice={setMinPrice}
-                maxPrice={maxPrice}
-                setMaxPrice={setMaxPrice}
-                minSeats={minSeats}
-                setMinSeats={setMinSeats}
-                maxSeats={maxSeats}
-                setMaxSeats={setMaxSeats}
-                transmissionType={transmissionType}
-                setTransmissionType={setTransmissionType}
-                applyFilters={applyFilters}
-            />
-
-            <FlatList
-                data={filteredCars}
-                renderItem={renderItem}
-                keyExtractor={(item) => item._id.toString()}
-                numColumns={2}
-                columnWrapperStyle={styles.row}
-                contentContainerStyle={styles.listContainer}
-            />
+                <FlatList
+                    data={filteredCars}
+                    renderItem={renderItem}
+                    keyExtractor={(item) => item._id.toString()}
+                    numColumns={2}
+                    columnWrapperStyle={styles.row}
+                    contentContainerStyle={styles.listContainer}
+                />
+            </View>
+            
         </View>
     );
 };
@@ -152,30 +155,38 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
 const styles = StyleSheet.create({
     container: {
         backgroundColor: '#F6F5FA',
-        flex: 1,
+        //flex: 1,
         padding: 10,
     },
     topBar: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        paddingHorizontal: 10,
-        paddingVertical: 15,
-        backgroundColor: '#fff',
+        paddingHorizontal: 20,
+        paddingVertical: 25,
+        backgroundColor: '#1C146B',
         borderBottomWidth: 1,
         borderBottomColor: '#ddd',
     },
     logo: {
-        width: 100,
+        width: 80,
         height: 40,
     },
     rightButtons: {
         flexDirection: 'row',
     },
+
     topBarButton: {
-        marginLeft: 20,
-        fontSize: 16,
-        color: '#007bff',
+        backgroundColor: '#5e68c4',
+        borderRadius: 20,
+        paddingVertical: 10,
+        paddingHorizontal: 15,
+    },
+    topBarButtonText: {
+        color: '#FFFFFF',
+        fontSize: 14,
+        fontWeight: 'bold',
+        textAlign: 'center',
     },
     title: {
         fontSize: 24,
@@ -217,7 +228,7 @@ const styles = StyleSheet.create({
         marginBottom: 8,
     },
     pricetag: {
-        backgroundColor: '#6836F5',
+        backgroundColor: '#5e68c4',
         height: 30,
         padding: 7,
         borderRadius: 25,
