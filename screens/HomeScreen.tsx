@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Image, View, Button, FlatList, Text, TouchableOpacity, StyleSheet, ActivityIndicator, Dimensions } from 'react-native';
 import { getCars } from '../apiService';
 import FilterComponent from '../components/FilterComponent';
+import Icon from 'react-native-vector-icons/Ionicons'; // Example: using Ionicons
 
 const imageMap = {
     'white-tesla.png': require('../assets/cars/white-tesla.png'),
@@ -111,14 +112,14 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
 
                 {/* Put Icons instead of text */}
                 <View style={styles.rightButtons}>
-                    <TouchableOpacity style={styles.topBarButton} onPress={() => navigation.navigate('Support')}>
-                        <Text style={styles.topBarButtonText}>Support</Text>
+                    <TouchableOpacity style={styles.topBarIcon} onPress={() => navigation.navigate('Support')}>
+                        <Icon name="help-circle-outline" size={30} color="#FFFFFF" />
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.topBarButton} onPress={() => navigation.navigate('Notifications')}>
-                        <Text style={styles.topBarButtonText}>Notifications</Text>
+                    <TouchableOpacity style={styles.topBarIcon} onPress={() => navigation.navigate('Notifications')}>
+                        <Icon name="notifications-outline" size={30} color="#FFFFFF" />
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.topBarButton} onPress={() => navigation.navigate('User')}>
-                        <Text style={styles.topBarButtonText}>User</Text>
+                    <TouchableOpacity style={styles.topBarIcon} onPress={() => navigation.navigate('User')}>
+                        <Icon name="person-outline" size={30} color="#FFFFFF" />
                     </TouchableOpacity>
                 </View>
             </View>
@@ -179,8 +180,12 @@ const styles = StyleSheet.create({
     topBarButton: {
         backgroundColor: '#5e68c4',
         borderRadius: 20,
-        paddingVertical: 10,
+        paddingVertical: 5,
         paddingHorizontal: 15,
+    },
+    topBarIcon: {
+        paddingVertical: 5,
+        paddingHorizontal: 10,
     },
     topBarButtonText: {
         color: '#FFFFFF',
