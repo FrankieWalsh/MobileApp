@@ -1,19 +1,49 @@
-import React from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import { View, TouchableOpacity, StyleSheet, Image } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons'; // Import icons
+import { getNotifications } from '../apiService'; // Use the refactored API call
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const Header = () => {
+const Header = ({ title }) => {
     const navigation = useNavigation();
+    const [hasUnreadNotifications, setHasUnreadNotifications] = useState(false);
+
+    const fetchNotifications = async () => {
+        try {
+            const userId = await AsyncStorage.getItem('userId');
+            if (!userId) {
+                console.log("No user ID found in AsyncStorage");
+                return;
+            }
+
+            const notifications = await getNotifications(userId); // Fetch notifications using the userId
+            const unread = notifications.some(notif => !notif.isRead);
+            setHasUnreadNotifications(unread);
+        } catch (error) {
+            console.error('Error fetching notifications:', error);
+        }
+    };
+
+    // Refetch notifications every time the Header comes into focus
+    useFocusEffect(
+        useCallback(() => {
+            fetchNotifications();  // Fetch notifications when the screen is focused
+        }, [])
+    );
 
     return (
         <View style={styles.headerContainer}>
-            {/* Logo on the left */}
-            <Image source={require('../assets/bilway.png')} style={styles.logo} />
+            <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+                <Image source={require('../assets/bilway.png')} style={styles.logo} />
+            </TouchableOpacity>
 
-            {/* Notification Bell Icon */}
             <TouchableOpacity onPress={() => navigation.navigate('Notifications')}>
-                <Ionicons name="notifications-outline" size={24} color="black" style={styles.bellIcon} />
+                <View style={styles.notificationContainer}>
+                    <Ionicons name="notifications-outline" size={24} color="black" />
+                    {hasUnreadNotifications && <View style={styles.redDot} />}
+                </View>
             </TouchableOpacity>
         </View>
     );
@@ -38,13 +68,21 @@ const styles = StyleSheet.create({
     logo: {
         marginLeft: 10,
         marginTop: 30,
-        width: 120,  // Adjust the width of the logo
-        height: 50,  // Adjust the height of the logo
-        resizeMode: 'contain', // Ensure the logo scales correctly
+        width: 120,
+        height: 50,
+        resizeMode: 'contain',
     },
-    bellIcon: {
-        marginRight: 20,
-        marginTop: 20,
+    notificationContainer: {
+        position: 'relative',
+    },
+    redDot: {
+        width: 10,
+        height: 10,
+        borderRadius: 5,
+        backgroundColor: 'red',
+        position: 'absolute',
+        right: 0,
+        top: 0,
     },
 });
 

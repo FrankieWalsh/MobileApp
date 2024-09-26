@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, ActivityIndicator } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Image, ActivityIndicator, ScrollView } from 'react-native';
 import { getUserBooking } from '../apiService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from '../header/header';
+import { useFocusEffect } from '@react-navigation/native';
 
+// Function to map car images dynamically
 const getImageForCar = (imageName) => {
     const images = {
         'white-tesla.png': require('../assets/cars/white-tesla.png'),
@@ -27,28 +29,40 @@ const getImageForCar = (imageName) => {
 
 const HomeScreen = ({ navigation }) => {
     const [userName, setUserName] = useState('');
-    const [bookedCar, setBookedCar] = useState(null);
+    const [bookings, setBookings] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [expandedBookingId, setExpandedBookingId] = useState(null); // State to track expanded bookings
 
-    useEffect(() => {
-        const fetchUserData = async () => {
-            try {
-                const name = await AsyncStorage.getItem('userName');
-                setUserName(name || 'User');
+    const fetchUserData = async () => {
+        try {
+            const name = await AsyncStorage.getItem('userName');
+            setUserName(name || 'User');
 
-                const bookings = await getUserBooking();
-                if (bookings && bookings.length > 0) {
-                    setBookedCar(bookings[0]);
-                }
-            } catch (error) {
-                console.error('Error loading user data or booking:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
+            const bookings = await getUserBooking();
+            console.log(bookings)
+            setBookings(bookings); // Set all bookings
+        } catch (error) {
+            console.error('Error loading user data or booking:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
-        fetchUserData();
-    }, []);
+    // Refetch data every time the Home screen is focused
+    useFocusEffect(
+        useCallback(() => {
+            setLoading(true); // Set loading state
+            fetchUserData();   // Re-fetch data when the screen is focused
+        }, [])
+    );
+
+    const toggleBookingDetails = (bookingId) => {
+        if (expandedBookingId === bookingId) {
+            setExpandedBookingId(null); // Collapse if already expanded
+        } else {
+            setExpandedBookingId(bookingId); // Expand the clicked booking
+        }
+    };
 
     if (loading) {
         return <ActivityIndicator size="large" />;
@@ -56,27 +70,11 @@ const HomeScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <Header/>
+            <Header />
             <Text style={styles.title}>Welcome, {userName}!</Text>
             <Text style={styles.subtitle}>Find your perfect car now!</Text>
+            <ScrollView contentContainerStyle={styles.scrollViewContainer}>
 
-            {/* Display booked car if available */}
-            {bookedCar ? (
-                <View style={styles.carCard}>
-                    <Image source={getImageForCar(bookedCar.car_id.image)} style={styles.carImage} />
-                    <View style={styles.carDetails}>
-                        <Text style={styles.carName}>{bookedCar.car_id.model}</Text>
-                        <Text style={styles.carBrand}>{bookedCar.car_id.brand}</Text>
-                        <TouchableOpacity onPress={() => navigation.navigate('BookingConfirmation', { carId: bookedCar.car_id._id })}>
-                            <Text style={styles.garageLink}>View Booking</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            ) : (
-                <Text>No car booked currently.</Text>
-            )}
-
-            {/* Updated Available Cars Button */}
             <TouchableOpacity style={styles.bigButton} onPress={() => navigation.navigate('CarList')}>
                 <View style={styles.bigButtonContent}>
                     <Text style={styles.buttonMainText}>Available Cars</Text>
@@ -86,6 +84,49 @@ const HomeScreen = ({ navigation }) => {
                     </View>
                 </View>
             </TouchableOpacity>
+
+            {/* Display all bookings */}
+            <Text style={styles.title}>Booked cars:</Text>
+            {bookings.length > 0 ? (
+                bookings.map((booking) => (
+                    <View key={booking._id} style={styles.carCard}>
+                        <TouchableOpacity onPress={() => toggleBookingDetails(booking._id)}>
+                            <View style={styles.carHeader}>
+                                <Image source={getImageForCar(booking.car_id.image)} style={styles.carImage} />
+                                <View style={styles.carDetails}>
+                                    <Text style={styles.carName}>{booking.car_id.model}</Text>
+                                    <Text style={styles.carBrand}>{booking.car_id.brand}</Text>
+                                </View>
+                                {/* Arrow to indicate expand/collapse */}
+                                <Text style={styles.arrow}>{expandedBookingId === booking._id ? '↑' : '↓'}</Text>
+                            </View>
+                        </TouchableOpacity>
+
+                        {/* If this booking is expanded, show more details */}
+                        {expandedBookingId === booking._id && (
+                            <View style={styles.expandedDetails}>
+                                <Text style={styles.detailText}>
+                                    Pickup Location: {booking.pickup_location_id.address}
+                                </Text>
+                                <Text style={styles.detailText}>
+                                    Rental Start: {new Date(booking.rental_start_date).toLocaleDateString()}
+                                </Text>
+                                <Text style={styles.detailText}>
+                                    Rental End: {new Date(booking.rental_end_date).toLocaleDateString()}
+                                </Text>
+                                {/*<TouchableOpacity*/}
+                                {/*    onPress={() => navigation.navigate('BookingConfirmation', { carId: booking.car_id._id })}*/}
+                                {/*>*/}
+                                {/*    <Text style={styles.garageLink}>View Booking</Text>*/}
+                                {/*</TouchableOpacity>*/}
+                            </View>
+                        )}
+                    </View>
+                ))
+            ) : (
+                <Text>No cars booked currently.</Text>
+            )}
+            </ScrollView>
         </View>
     );
 };
@@ -96,6 +137,9 @@ const styles = StyleSheet.create({
         backgroundColor: '#f4f4f4',
         paddingHorizontal: 20,
         paddingTop: 130,
+    },
+    scrollViewContainer: {
+        paddingVertical: 10,
     },
     title: {
         fontSize: 28,
@@ -109,7 +153,6 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     carCard: {
-        flexDirection: 'row',
         backgroundColor: '#fff',
         borderRadius: 10,
         shadowColor: '#000',
@@ -119,6 +162,10 @@ const styles = StyleSheet.create({
         elevation: 2,
         marginBottom: 20,
         padding: 15,
+    },
+    carHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
         alignItems: 'center',
     },
     carImage: {
@@ -139,10 +186,23 @@ const styles = StyleSheet.create({
         color: '#888',
         marginBottom: 5,
     },
+    arrow: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: '#6836F5',
+    },
+    expandedDetails: {
+        marginTop: 10,
+    },
+    detailText: {
+        fontSize: 14,
+        color: '#555',
+    },
     garageLink: {
         fontSize: 14,
         color: '#6836F5',
         textDecorationLine: 'underline',
+        marginTop: 10,
     },
     bigButton: {
         backgroundColor: '#6836F5',
@@ -154,9 +214,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     bigButtonContent: {
-        flexDirection: 'column',  // Change this to column for a vertical layout
+        flexDirection: 'column',
         justifyContent: 'center',
-        alignItems: 'flex-start',  // Center the text horizontally
+        alignItems: 'flex-start',
         width: '100%',
     },
     buttonMainText: {
@@ -175,7 +235,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         borderRadius: 50,
         padding: 10,
-        alignSelf: "flex-end",
+        alignSelf: 'flex-end',
         marginRight: 20,
     },
     arrowText: {

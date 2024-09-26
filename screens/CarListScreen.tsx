@@ -44,6 +44,7 @@ const CarListScreen: React.FC = ({ navigation }: any) => {
         const fetchCars = async () => {
             try {
                 const data = await getCars();
+                applyFilters();
                 setCars(data);
                 setFilteredCars(data);
             } catch (err) {
@@ -58,7 +59,7 @@ const CarListScreen: React.FC = ({ navigation }: any) => {
     const applyFilters = () => {
         const filtered = cars.filter(car => {
             return (
-                car.availability = true &&
+                car.availability &&
                 car.price >= minPrice &&
                 car.price <= maxPrice &&
                 car.number_of_seats >= minSeats &&
