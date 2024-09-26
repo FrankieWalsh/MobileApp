@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, ActivityIndicator, Image, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
-//import { PanGestureHandler } from 'react-native-gesture-handler';
-import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
+import {View, Text, StyleSheet, ActivityIndicator, Image, ScrollView, TouchableOpacity, Dimensions} from 'react-native';
+import { PanGestureHandler } from 'react-native-gesture-handler';
+import Animated, {
+    useSharedValue,
+    useAnimatedStyle,
+    withSpring,
+} from 'react-native-reanimated';
 import { getCarDetails } from '../apiService';
 import MapComponent from '../components/MapComponent';
+import {Ionicons} from "@expo/vector-icons";
 
 const { width, height } = Dimensions.get('window');
 
@@ -96,69 +101,79 @@ const CarDetailsScreen = ({ route, navigation }) => {
     }
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
+            <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('CarList')}>
+                <Ionicons name="arrow-back" size={28} color="white" />
+            </TouchableOpacity>
+            {/* Background map */}
             <View style={styles.mapBackground}>
                 <MapComponent cars={[car]} />
             </View>
 
-            <View style={styles.mainCard}>
-
-                <View style={styles.headerContainer}>
-                    <Text style={styles.modelName}>{car.model}</Text>
-                    <View style={styles.brandContainer}>
-                        <Text style={styles.brandName}>{car.brand}</Text>
-                    </View>
-                </View>
-
-                {car.image && (
-                    <Image
-                        source={getImage(car.image)}
-                        style={styles.carImage}
-                        resizeMode="contain"
-                    />
-                )}
-
-                <View style={styles.detailCard}>
-                    <View style={styles.specificationsContainer}>
-                        <View style={styles.specBox}>
-                            <Text style={styles.specTitle}>{car.type}</Text>
-                        </View>
-                        <View style={styles.specBox}>
-                            <Text style={styles.specTitle}>{car.number_of_seats} seats</Text>
+            {/* PanGestureHandler to track dragging */}
+            <PanGestureHandler onGestureEvent={onGestureEvent} onEnded={onGestureEnd}>
+                {/* Main card with animated style */}
+                <Animated.View style={[styles.mainCard, animatedStyle]}>
+                    <View style={styles.headerContainer}>
+                        <Text style={styles.modelName}>{car.model}</Text>
+                        <View style={styles.brandContainer}>
+                            <Text style={styles.brandName}>{car.brand}</Text>
                         </View>
                     </View>
 
-                    <Text style={styles.specificationsHeader}>SPECIFICATIONS</Text>
-                    <ScrollView
-                        horizontal={true}
-                        showsHorizontalScrollIndicator={false}
-                        style={styles.specificationsContainer}>
-                        {car.specifications && Object.entries(car.specifications).map(([key, value]) => (
-                            <View key={key} style={styles.specBox}>
-                                <Text style={styles.specificationKey}>{`${key} `}</Text>
-                                <Text style={styles.specificationValue}>{`${value}`}</Text>
+                    {/* Car Image */}
+                    {car.image && (
+                        <Image
+                            source={getImage(car.image)}
+                            style={styles.carImage}
+                            resizeMode="contain"
+                        />
+                    )}
+
+                    {/* Car details */}
+                    <View style={styles.detailCard}>
+                        <View style={styles.specificationsContainer}>
+                            <View style={styles.specBox}>
+                                <Text style={styles.specTitle}>{car.type}</Text>
                             </View>
-                        ))}
-                    </ScrollView>
-
-                    <View style={styles.footerContainer}>
-                        <View style={styles.footerPriceTag}>
-                            <Text style={styles.footerPrice}>${car.price}</Text>
-                            <Text style={styles.footerPricePerDay}> per day</Text>
+                            <View style={styles.specBox}>
+                                <Text style={styles.specTitle}>{car.number_of_seats} seats</Text>
+                            </View>
                         </View>
 
-                        <View>
-                            <TouchableOpacity
-                                onPress={() => navigation.navigate('Booking', { carId: car.id })}
-                                style={styles.footerButtonContainer}
-                            >
-                                <Text style={styles.footerButtonText}>Book Now</Text>
-                            </TouchableOpacity>
+                        <Text style={styles.specificationsHeader}>SPECIFICATIONS</Text>
+                        <ScrollView
+                            horizontal={true}
+                            showsHorizontalScrollIndicator={false}
+                            style={styles.specificationsContainer}>
+                            {car.specifications && Object.entries(car.specifications).map(([key, value]) => (
+                                <View key={key} style={styles.specBox}>
+                                    <Text style={styles.specificationKey}>{`${key} `}</Text>
+                                    <Text style={styles.specificationValue}>{`${value}`}</Text>
+                                </View>
+                            ))}
+                        </ScrollView>
+
+                        {/* Footer with price and booking button */}
+                        <View style={styles.footerContainer}>
+                            <View style={styles.footerPriceTag}>
+                                <Text style={styles.footerPrice}>${car.price}</Text>
+                                <Text style={styles.footerPricePerDay}> per day</Text>
+                            </View>
+
+                            <View>
+                                <TouchableOpacity
+                                    onPress={() => navigation.navigate('Booking', { carId: car.id })}
+                                    style={styles.footerButtonContainer}
+                                >
+                                    <Text style={styles.footerButtonText}>Book Now</Text>
+                                </TouchableOpacity>
+                            </View>
                         </View>
                     </View>
-                </View>
-            </View>
-        </SafeAreaView>
+                </Animated.View>
+            </PanGestureHandler>
+        </View>
     );
 };
 
@@ -340,6 +355,15 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
         textAlign: 'center',
+    },
+    backButton: {
+        position: 'absolute',
+        top: 40,
+        left: 20,
+        zIndex: 10, // Ensure the back button is on top of everything
+        backgroundColor: '#00000080', // Semi-transparent background
+        padding: 10,
+        borderRadius: 20,
     },
 });
 
