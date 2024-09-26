@@ -8,6 +8,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { getCarDetails } from '../apiService';
 import MapComponent from '../MapComponent';
+import {Ionicons} from "@expo/vector-icons";
 
 const { width, height } = Dimensions.get('window');
 
@@ -101,6 +102,9 @@ const CarDetailsScreen = ({ route, navigation }) => {
 
     return (
         <View style={styles.container}>
+            <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('CarList')}>
+                <Ionicons name="arrow-back" size={28} color="white" />
+            </TouchableOpacity>
             {/* Background map */}
             <View style={styles.mapBackground}>
                 <MapComponent cars={[car]} />
@@ -176,6 +180,15 @@ const CarDetailsScreen = ({ route, navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+    },
+    backButton: {
+        position: 'absolute',
+        top: 40,
+        left: 20,
+        zIndex: 10, // Ensure the back button is on top of everything
+        backgroundColor: '#00000080', // Semi-transparent background
+        padding: 10,
+        borderRadius: 20,
     },
     mapBackground: {
         flex: 1,
