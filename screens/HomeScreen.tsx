@@ -117,7 +117,6 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
                     style={styles.logo}
                 />
 
-                {/* Put Icons instead of text */}
                 <View style={styles.rightButtons}>
                     <TouchableOpacity style={styles.topBarIcon} onPress={() => navigation.navigate('Support')}>
                         <Icon name="help-circle-outline" size={30} color="#FFFFFF" />

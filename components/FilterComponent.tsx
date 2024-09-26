@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
         padding: 10,
         marginHorizontal: -3,
         borderRadius: 5,
-        marginTop: 120,
+        //marginTop: 10,
     },
     filterButtonText: {
         color: '#fff',

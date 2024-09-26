@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, ActivityIndicator, Image, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
-import { PanGestureHandler } from 'react-native-gesture-handler';
+//import { PanGestureHandler } from 'react-native-gesture-handler';
 import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
 import { getCarDetails } from '../apiService';
-import MapComponent from '../MapComponent';
+import MapComponent from '../components/MapComponent';
 
 const { width, height } = Dimensions.get('window');
 
