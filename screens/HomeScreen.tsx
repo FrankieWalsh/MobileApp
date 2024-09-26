@@ -109,7 +109,7 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
         </TouchableOpacity>
     );
     return (
-        <SafeAreaView>
+        <SafeAreaView style={styles.safeArea}>
             {/* Top Bar */}
             <View style={styles.topBar}>
                 <Image
@@ -161,9 +161,12 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
 };
 
 const styles = StyleSheet.create({
+    safeArea: {
+        flex: 1
+    },
     container: {
         backgroundColor: '#F6F5FA',
-        //flex: 1,
+        flex: 1,
         padding: 10,
     },
     topBar: {
