@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 //import { View, Text, Button, StyleSheet } from 'react-native';
-import { Image, View, Button, FlatList, Text, TouchableOpacity, StyleSheet, ActivityIndicator, Dimensions } from 'react-native';
+import { Image, View, Button, FlatList, Text, TouchableOpacity, StyleSheet, ActivityIndicator, Dimensions, SafeAreaView } from 'react-native';
 import { getCars } from '../apiService';
 import FilterComponent from '../components/FilterComponent';
 import Icon from 'react-native-vector-icons/Ionicons'; // Example: using Ionicons
@@ -30,6 +30,13 @@ const getImage = (imageName: string) => {
 
 
 const HomeScreen: React.FC = ({ navigation }: any) => {
+    
+    useEffect(() => {
+        navigation.setOptions({
+            headerShown: false, // Disable header
+        });
+    }, [navigation]);
+
     const [cars, setCars] = useState<any[]>([]);
     const [filteredCars, setFilteredCars] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -102,11 +109,11 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
         </TouchableOpacity>
     );
     return (
-        <View>
+        <SafeAreaView>
             {/* Top Bar */}
             <View style={styles.topBar}>
                 <Image
-                    source={require('../assets/LogoBilway.jpg')} // Change to png logo
+                    source={require('../assets/LogoBilway_White.png')} // Change to png logo
                     style={styles.logo}
                 />
 
@@ -149,7 +156,7 @@ const HomeScreen: React.FC = ({ navigation }: any) => {
                 />
             </View>
             
-        </View>
+        </SafeAreaView>
     );
 };
 
@@ -164,14 +171,14 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingHorizontal: 20,
-        paddingVertical: 25,
+        paddingVertical: 18,
         backgroundColor: '#1C146B',
         borderBottomWidth: 1,
         borderBottomColor: '#ddd',
     },
     logo: {
-        width: 80,
-        height: 40,
+        width: width*0.24,
+        height: width*0.12,
     },
     rightButtons: {
         flexDirection: 'row',
@@ -234,9 +241,9 @@ const styles = StyleSheet.create({
     },
     pricetag: {
         backgroundColor: '#5e68c4',
-        height: 30,
-        padding: 7,
-        borderRadius: 25,
+        height: 35,
+        padding: 6,
+        borderRadius: 20,
         flexDirection: 'row',
         alignItems: "center",
     },
