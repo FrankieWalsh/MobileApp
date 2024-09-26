@@ -1,13 +1,50 @@
-import React, {useEffect} from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Button, StyleSheet, TextInput, Alert, TouchableOpacity } from 'react-native';
+import { signUpUser } from '../apiService'; // Import the signUpUser function
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RouteProp } from '@react-navigation/native';
 
-const SignUpScreen = ({ navigation }) => {
+type RootStackParamList = {
+    SignUp: undefined;
+    Login: undefined;
+};
+
+type SignUpScreenNavigationProp = StackNavigationProp<RootStackParamList, 'SignUp'>;
+type SignUpScreenRouteProp = RouteProp<RootStackParamList, 'SignUp'>;
+
+type Props = {
+    navigation: SignUpScreenNavigationProp;
+    route: SignUpScreenRouteProp;
+};
+
+const SignUpScreen: React.FC<Props> = ({ navigation }) => {
     useEffect(() => {
         navigation.setOptions({
             headerShown: false, // Disable header
         });
     }, [navigation]);
-    
+    const [name, setName] = useState<string>('');
+    const [email, setEmail] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
+    const handleSignUp = async () => {
+        if (!name || !email || !password) {
+            Alert.alert('Error', 'Please fill in all fields');
+            return;
+        }
+
+        try {
+            const response = await signUpUser(name, email, password);  // Use signUpUser function from apiService
+            console.log(response)
+
+            if (response.status === 201) {
+                Alert.alert('Success', 'Account created successfully');
+                navigation.replace('Login'); // Navigate back to Login after signup
+            }
+        } catch (error) {
+            console.error(error);
+            Alert.alert('Error', 'Unable to create account. Please try again.');
+        }
+    };
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Sign Up</Text>
@@ -15,31 +52,30 @@ const SignUpScreen = ({ navigation }) => {
             <TextInput
                 style={styles.input}
                 placeholder="Name"
-                placeholderTextColor="#aaa"
-                autoCapitalize="words"
+                value={name}
+                onChangeText={setName}
             />
-
             <TextInput
                 style={styles.input}
                 placeholder="Email"
-                placeholderTextColor="#aaa"
+                value={email}
+                onChangeText={setEmail}
                 keyboardType="email-address"
                 autoCapitalize="none"
             />
-
             <TextInput
                 style={styles.input}
                 placeholder="Password"
-                placeholderTextColor="#aaa"
                 secureTextEntry={true}
-                autoCapitalize="none"
+                value={password}
+                onChangeText={setPassword}
             />
 
-            <TouchableOpacity style={styles.button} onPress={() => navigation.replace('Login')}>
+            <TouchableOpacity style={styles.button} onPress={handleSignUp}>
                 <Text style={styles.buttonText}>Sign Up</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.loginButton} onPress={() => navigation.navigate('Login')}>
+            <TouchableOpacity style={styles.loginButton} onPress={() => navigation.replace('Login')}>
                 <Text style={styles.loginText}>Already have an account? Login</Text>
             </TouchableOpacity>
         </View>
@@ -56,7 +92,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 32,
         fontWeight: 'bold',
-        color: '#FFFFFF', 
+        color: '#FFFFFF',
         textAlign: 'center',
         marginBottom: 40,
     },

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, ScrollView, Image, Dimensions, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, ScrollView, Image, Dimensions, TouchableOpacity, SafeAreaView } from 'react-native';
 import { getCarDetails } from '../apiService';
+import MapComponent from '../components/MapComponent';
 
 const { width } = Dimensions.get('window');
 
@@ -59,8 +60,10 @@ const CarDetailsScreen = ({ route, navigation }) => {
     }
 
     return (
-        <View style={styles.container}>
-            <View style={styles.mapBackground}></View>
+        <SafeAreaView style={styles.container}>
+            <View style={styles.mapBackground}>
+                <MapComponent cars={[car]} />
+            </View>
 
             <View style={styles.mainCard}>
 
@@ -119,12 +122,13 @@ const CarDetailsScreen = ({ route, navigation }) => {
                     </View>
                 </View>
             </View>
-        </View>
+        </SafeAreaView>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
+        backgroundColor: '#1C146B',
         flex: 1,
     },
     mapBackground: {
