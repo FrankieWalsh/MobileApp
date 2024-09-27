@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, Text, Button, StyleSheet, TextInput, Alert, TouchableOpacity, Image, SafeAreaView } from 'react-native';
 import { loginUser } from '../apiService';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -42,59 +42,82 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
         }
     };
 
-    useEffect(() => {
-        navigation.setOptions({
-            headerShown: false, // Disable header
-        });
-    }, [navigation]);
-    
     return (
-        <View style={styles.container}>
-            <Image source={require('../assets/LogoBilway_White.png')} style={{ width: 300, height: 150, alignSelf: 'center', marginBottom: 20 }} />
+        <SafeAreaView style={styles.container}>
+            <View style={styles.logoContainer}>
+                <Image
+                    source={require('../assets/car.png')}
+                    style={styles.logo}
+                />
+            </View>
+
             <Text style={styles.title}>Welcome to BilWay</Text>
             <Text style={styles.subtitle}>Log in to your account</Text>
 
             <View style={styles.inputContainer}>
-            <Icon name="envelope" size={20} color="#333" style={styles.icon} />
-            <TextInput 
-                style={styles.input} 
-                placeholder="Email" 
-                value={email}
-                onChangeText={setEmail}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                placeholderTextColor="#777"
-            />
+                <Icon name="envelope" size={20} color="#333" style={styles.icon} />
+                <TextInput
+                    style={styles.input}
+                    placeholder="Email"
+                    value={email}
+                    onChangeText={setEmail}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    placeholderTextColor="#777"
+                />
             </View>
+
             <View style={styles.inputContainer}>
-            <Icon name="lock" size={24} color="#333" style={styles.icon} />
-            <TextInput 
-                style={styles.input} 
-                placeholder="Password" 
-                secureTextEntry={true}
-                value={password}
-                onChangeText={setPassword}
-                placeholderTextColor="#777"
-            />
+                <Icon name="lock" size={24} color="#333" style={styles.icon} />
+                <TextInput
+                    style={styles.input}
+                    placeholder="Password"
+                    secureTextEntry={true}
+                    value={password}
+                    onChangeText={setPassword}
+                    placeholderTextColor="#777"
+                />
             </View>
 
-            <TouchableOpacity style={styles.button} onPress={handleLogin}>
-                <Text style={styles.buttonText}>Login</Text>
+            <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+                <Text style={styles.loginButtonText}>Login</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.signUpButton} onPress={() => navigation.navigate('SignUp')}>
-                <Text style={styles.signUpText}>Sign Up</Text>
+            <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
+                <Text style={styles.signupText}>Don't have an account? Sign up</Text>
             </TouchableOpacity>
-        </View>
+        </SafeAreaView>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#1C146B', 
+        backgroundColor: '#f4f4f4',
+        paddingHorizontal: 25,
         justifyContent: 'center',
-        paddingHorizontal: 30,
+        margin: 10,
+    },
+    logoContainer: {
+        alignItems: 'center',
+        marginBottom: 5,
+    },
+    logo: {
+        width: 150,
+        height: 150,
+    },
+    title: {
+        fontSize: 28,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        color: '#333',
+        marginBottom: 10,
+    },
+    subtitle: {
+        fontSize: 18,
+        color: '#666',
+        textAlign: 'center',
+        marginBottom: 30,
     },
     inputContainer: {
         flexDirection: 'row',
@@ -102,7 +125,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         borderRadius: 10,
         paddingHorizontal: 15,
-        //paddingVertical: 12,
+        paddingVertical: 12,
         marginBottom: 20,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
@@ -110,53 +133,29 @@ const styles = StyleSheet.create({
         shadowRadius: 3,
         elevation: 2,
     },
-    title: {
-        fontSize: 32,
-        fontWeight: 'bold',
-        color: '#FFFFFF', 
-        textAlign: 'center',
-        marginBottom: 10,
-    },
-    subtitle: {
-        fontSize: 18,
-        color: '#eeeeee',
-        textAlign: 'center',
-        marginBottom: 60,
-    },
     icon: {
         marginRight: 10,
     },
     input: {
-        height: 60,
         flex: 1,
-        //backgroundColor: '#fff',
-        //borderRadius: 25,
-        paddingHorizontal: 15,
-        //marginBottom: 20,
         fontSize: 16,
         color: '#333',
     },
-    button: {
-        backgroundColor: '#5e68c4', 
+    loginButton: {
+        backgroundColor: '#6836F5',
         paddingVertical: 15,
-        borderRadius: 25,
+        borderRadius: 10,
         alignItems: 'center',
-        marginBottom: 10,
+        marginBottom: 20,
     },
-    buttonText: {
+    loginButtonText: {
         color: '#fff',
         fontSize: 18,
         fontWeight: 'bold',
     },
-    signUpButton: {
-        paddingVertical: 15,
-        borderRadius: 25,
-        alignItems: 'center',
-        borderColor: '#fff',
-        borderWidth: 1,
-    },
-    signUpText: {
-        color: '#fff',
+    signupText: {
+        color: '#6836F5',
+        textAlign: 'center',
         fontSize: 16,
     },
 });
