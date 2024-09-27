@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, SafeAreaView, Text, TouchableOpacity, StyleSheet, Alert, ActivityIndicator, ScrollView } from 'react-native';
 import CalendarPicker from 'react-native-calendar-picker';
-import { bookCar, getLocations, getCarDetails, sendNotification } from '../apiService';
+import { bookCar, getLocations, getCarDetails } from '../apiService';
 import RNPickerSelect from 'react-native-picker-select';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -25,41 +25,26 @@ const BookingScreen = ({ route, navigation }) => {
         fetchUserId();
     }, []);
 
-    // Fetch car details and location when the component mounts
     useEffect(() => {
         const fetchCarDetailsAndLocations = async () => {
             try {
-                // Get the car details (which includes the location_id)
                 const carDetails = await getCarDetails(carId);
                 const carLocationId = carDetails.location_id;
-
-                // Fetch all locations, and set the car's location as the pickup location
                 const fetchedLocations = await getLocations();
                 const carLocation = fetchedLocations.find(loc => loc._id === carLocationId);
 
                 if (carLocation) {
-                    setPickupLocation(carLocation._id); // Automatically set the pickup location
+                    setPickupLocation(carLocation._id);
                 }
                 setLocations(fetchedLocations.map(loc => ({ label: loc.address, value: loc._id })));
-
             } catch (error) {
                 Alert.alert('Error', 'Unable to fetch car or location details.');
             } finally {
                 setLoading(false);
             }
         };
-
         fetchCarDetailsAndLocations();
     }, [carId]);
-
-    const handleDateChange = (date, type) => {
-        console.log("hello")
-        if (type === 'START_DATE') {
-            setStartDate(date);
-        } else if (type === 'END_DATE') {
-            setEndDate(date);
-        }
-    };
 
     const handleBooking = async () => {
         if (!userId) {
@@ -76,22 +61,11 @@ const BookingScreen = ({ route, navigation }) => {
         };
 
         try {
-            const bookingResponse = await bookCar(carId, bookingDetails);
-
-            // Assuming bookingResponse contains the car details for the notification
-            const notificationDetails = {
-                user_id: userId,
-                message: `Your booking for ${bookingResponse.car.model} is confirmed! Pickup: ${bookingResponse.pickupLocation}, Drop-off: ${bookingResponse.dropOffLocation}.`
-            };
-
-            // Send the notification request after booking confirmation
-            await sendNotification(notificationDetails);
-
+            await bookCar(carId, bookingDetails);
             Alert.alert('Booking Confirmed', 'Your car has been booked successfully.');
             navigation.navigate('Home');
         } catch (error) {
-            Alert.alert('Booking Confirmed', 'Your car has been booked successfully.');
-            navigation.navigate('Home');
+            Alert.alert('Booking Failed', 'There was an error processing your booking.');
         }
     };
 

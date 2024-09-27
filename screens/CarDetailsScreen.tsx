@@ -102,7 +102,7 @@ const CarDetailsScreen = ({ route, navigation }) => {
 
     return (
         <View style={styles.container}>
-            <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('Home')}>
+            <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('CarList')}>
                 <Ionicons name="arrow-back" size={28} color="white" />
             </TouchableOpacity>
             {/* Background map */}
