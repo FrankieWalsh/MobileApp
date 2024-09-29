@@ -45,10 +45,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.logoContainer}>
-                <Image
-                    source={require('../assets/car.png')}
-                    style={styles.logo}
-                />
+                <Image source={require('../assets/LogoBilway_White.png')} style={{ width: 300, height: 150, alignSelf: 'center', marginBottom: 20 }} />
             </View>
 
             <Text style={styles.title}>Welcome to BilWay</Text>
@@ -79,12 +76,12 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
                 />
             </View>
 
-            <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-                <Text style={styles.loginButtonText}>Login</Text>
+            <TouchableOpacity style={styles.button} onPress={handleLogin}>
+                <Text style={styles.buttonText}>Login</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
-                <Text style={styles.signupText}>Don't have an account? Sign up</Text>
+            <TouchableOpacity style={styles.signUpButton} onPress={() => navigation.navigate('SignUp')}>
+                <Text style={styles.signUpText}>Sign Up</Text>
             </TouchableOpacity>
         </SafeAreaView>
     );
@@ -93,10 +90,8 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#f4f4f4',
-        paddingHorizontal: 25,
+        backgroundColor: '#1C146B',
         justifyContent: 'center',
-        margin: 10,
     },
     logoContainer: {
         alignItems: 'center',
@@ -107,17 +102,17 @@ const styles = StyleSheet.create({
         height: 150,
     },
     title: {
-        fontSize: 28,
+        fontSize: 32,
         fontWeight: 'bold',
+        color: '#FFFFFF',
         textAlign: 'center',
-        color: '#333',
         marginBottom: 10,
     },
     subtitle: {
         fontSize: 18,
-        color: '#666',
+        color: '#eeeeee',
         textAlign: 'center',
-        marginBottom: 30,
+        marginBottom: 40,
     },
     inputContainer: {
         flexDirection: 'row',
@@ -132,6 +127,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.1,
         shadowRadius: 3,
         elevation: 2,
+        margin: 5,
     },
     icon: {
         marginRight: 10,
@@ -141,21 +137,28 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#333',
     },
-    loginButton: {
-        backgroundColor: '#6836F5',
+    button: {
+        backgroundColor: '#5e68c4',
         paddingVertical: 15,
-        borderRadius: 10,
+        borderRadius: 25,
         alignItems: 'center',
-        marginBottom: 20,
+        margin: 10,
     },
-    loginButtonText: {
+    buttonText: {
         color: '#fff',
         fontSize: 18,
         fontWeight: 'bold',
     },
-    signupText: {
-        color: '#6836F5',
-        textAlign: 'center',
+    signUpButton: {
+        paddingVertical: 15,
+        borderRadius: 25,
+        alignItems: 'center',
+        borderColor: '#fff',
+        borderWidth: 1,
+        margin: 10,
+    },
+    signUpText: {
+        color: '#fff',
         fontSize: 16,
     },
 });

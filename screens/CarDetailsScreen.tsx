@@ -40,6 +40,7 @@ const CarDetailsScreen = ({ route, navigation }) => {
     const [error, setError] = useState(null);
 
     const translateY = useSharedValue(0);
+    const [isExpanded, setIsExpanded] = useState(false);
     const maxTranslateY = height * 0.5;
 
     useEffect(() => {
@@ -63,29 +64,17 @@ const CarDetailsScreen = ({ route, navigation }) => {
         };
     });
 
-    const onGestureEvent = (event) => {
-        const newY = event.nativeEvent.translationY;
-
-        if (translateY.value === 0 && newY > 0) {
-            // Allow smooth dragging downwards from the top
-            translateY.value = Math.min(newY, maxTranslateY);
+    const toggleCardPosition = () => {
+        if (isExpanded) {
+            // Move it back to the top
+            translateY.value = withSpring(0, { damping: 15, stiffness: 90 });
         } else {
-            // Allow both upward and downward movement within the allowed range
-            translateY.value = Math.max(Math.min(translateY.value + newY, maxTranslateY), 0);
+            // Move it down but clamp it within the allowed maxTranslateY
+            translateY.value = withSpring(maxTranslateY, { damping: 15, stiffness: 90 });
         }
+        setIsExpanded(!isExpanded); // Toggle the expanded state
     };
 
-
-    const onGestureEnd = (event) => {
-        const finalY = event.nativeEvent.translationY;
-
-        // Snap down if dragged more than halfway, otherwise snap back up
-        if (translateY.value > maxTranslateY / 2) {
-            translateY.value = withSpring(maxTranslateY, { damping: 15, stiffness: 90 });  // Snap fully down
-        } else {
-            translateY.value = withSpring(0, { damping: 15, stiffness: 90 });  // Snap back to the top (initial position)
-        }
-    };
 
 
     if (loading) {
@@ -102,33 +91,47 @@ const CarDetailsScreen = ({ route, navigation }) => {
 
     return (
         <View style={styles.container}>
-            <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('CarList')}>
-                <Ionicons name="arrow-back" size={28} color="white" />
-            </TouchableOpacity>
             {/* Background map */}
             <View style={styles.mapBackground}>
+                {/* Back button over the map */}
+                <TouchableOpacity
+                    style={styles.backButton}
+                    onPress={() => navigation.navigate('CarList')}
+                >
+                    <Ionicons name="arrow-back" size={24} color="white" />
+                </TouchableOpacity>
+
                 <MapComponent cars={[car]} />
             </View>
 
-            {/* PanGestureHandler to track dragging */}
-            <PanGestureHandler onGestureEvent={onGestureEvent} onEnded={onGestureEnd}>
-                {/* Main card with animated style */}
-                <Animated.View style={[styles.mainCard, animatedStyle]}>
-                    <View style={styles.headerContainer}>
-                        <Text style={styles.modelName}>{car.model}</Text>
-                        <View style={styles.brandContainer}>
-                            <Text style={styles.brandName}>{car.brand}</Text>
-                        </View>
-                    </View>
+            {/* Main card with animated style */}
+            <Animated.View style={[styles.mainCard, animatedStyle]}>
+                {/* Button to toggle card position */}
+                <TouchableOpacity
+                    onPress={toggleCardPosition}
+                    style={[styles.toggleButton, { zIndex: 10 }]} // Added background color and zIndex
+                >
+                    <Text style={styles.toggleButtonText}>
+                        {isExpanded ? 'Close Map' : 'Open Map'}
+                    </Text>
+                </TouchableOpacity>
 
-                    {/* Car Image */}
-                    {car.image && (
-                        <Image
-                            source={getImage(car.image)}
-                            style={styles.carImage}
-                            resizeMode="contain"
-                        />
-                    )}
+                {/* Car details and other UI elements */}
+                <View style={styles.headerContainer}>
+                    <Text style={styles.modelName}>{car.model}</Text>
+                    <View style={styles.brandContainer}>
+                        <Text style={styles.brandName}>{car.brand}</Text>
+                    </View>
+                </View>
+
+                {/* Car Image */}
+                {car.image && (
+                    <Image
+                        source={getImage(car.image)}
+                        style={styles.carImage}
+                        resizeMode="contain"
+                    />
+                )}
 
                     {/* Car details */}
                     <View style={styles.detailCard}>
@@ -172,7 +175,6 @@ const CarDetailsScreen = ({ route, navigation }) => {
                         </View>
                     </View>
                 </Animated.View>
-            </PanGestureHandler>
         </View>
     );
 };
@@ -340,6 +342,20 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
         textAlign: 'center',
+    },
+    toggleButton: {
+        backgroundColor: '#FFFFFF',
+        paddingVertical: 5,
+        paddingHorizontal: 20,
+        borderRadius: 25,
+        alignSelf: 'center',
+        marginBottom: 10,
+        position: 'absolute',
+    },
+    toggleButtonText: {
+        color: '#6836F5',
+        fontWeight: 'bold',
+        fontSize: 12,
     },
 });
 

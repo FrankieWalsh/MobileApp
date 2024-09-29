@@ -39,7 +39,6 @@ const HomeScreen = ({ navigation }) => {
             setUserName(name || 'User');
 
             const bookings = await getUserBooking();
-            console.log(bookings)
             setBookings(bookings); // Set all bookings
         } catch (error) {
             console.error('Error loading user data or booking:', error);

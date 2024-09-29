@@ -4,6 +4,7 @@ import CalendarPicker from 'react-native-calendar-picker';
 import {bookCar, getLocations, getCarDetails, sendNotification} from '../apiService';
 import RNPickerSelect from 'react-native-picker-select';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Header from '../header/header';
 
 const BookingScreen = ({ route, navigation }) => {
     const { carId } = route.params;
@@ -31,7 +32,7 @@ const BookingScreen = ({ route, navigation }) => {
             try {
                 // Get the car details (which includes the location_id)
                 const carDetails = await getCarDetails(carId);
-                const carLocationId = carDetails.location_id;
+                const carLocationId = carDetails.location_id.id;
 
                 // Fetch all locations, and set the car's location as the pickup location
                 const fetchedLocations = await getLocations();
@@ -102,6 +103,7 @@ const BookingScreen = ({ route, navigation }) => {
 
     return (
         <View style={styles.container}>
+            <Header></Header>
             <Text style={styles.heading}>Select Rental Dates</Text>
 
             <View style={styles.calendarContainer}>
