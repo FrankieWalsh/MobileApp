@@ -90,7 +90,7 @@ router.get('/user/:userId', async (req, res) => {
             .populate('dropoff_location_id');
 
         if (!bookings.length) {
-            return res.status(404).json({ message: 'No bookings found for this user' });
+            return res.status(200).json({ message: 'No bookings found for this user' });
         }
 
         res.status(200).json(bookings);

@@ -86,8 +86,13 @@ export const getUserBooking = async () => {
         const response = await axios.get(`${BASE_URL}/bookings/user/${userId}`);
         return response.data;
     } catch (error) {
-        console.error('Error fetching user booking:', error);
-        throw error;
+        if (error.response && error.response.status === 404) {
+            // If the error status is 404, return an empty array (no bookings found)
+            return [];
+        } else {
+            console.error('Error fetching user booking:', error);
+            throw error;
+        }
     }
 };
 
