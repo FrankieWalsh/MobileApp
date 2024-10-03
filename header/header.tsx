@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     },
     leftButtons: {
         top: 10,
-        right: 30,
+        right: 28,
     },
     rightButtons: {
         top: 28,

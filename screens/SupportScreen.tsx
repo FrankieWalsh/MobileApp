@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import Header from "../header/header";  // Asegúrate de importar el Header
 
 const SupportScreen: React.FC = () => {
-    // Estado para controlar qué FAQ está abierto
     const [openFAQ, setOpenFAQ] = useState<number | null>(null);
 
-    // Datos de las FAQs
     const faqs = [
         {
             id: 1,
@@ -24,78 +23,107 @@ const SupportScreen: React.FC = () => {
         }
     ];
 
-    // Función para manejar el despliegue de las FAQs
     const toggleFAQ = (id: number) => {
         setOpenFAQ(openFAQ === id ? null : id);
     };
 
     return (
-        <ScrollView contentContainerStyle={styles.container}>
-            {/* Sección de Contact Us */}
-            <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Contact Us</Text>
-                <Text style={styles.text}>Email: support@carrentalapp.com</Text>
-                <Text style={styles.text}>Phone: +1-234-567-8900</Text>
-                <Text style={styles.text}>Address: 123 Main Street, Odense, Denmark</Text>
-            </View>
+        <View style={styles.container}>
+            {/* Header */}
+            <Header />
 
-            {/* Sección de FAQs */}
-            <View style={styles.section}>
-                <Text style={styles.sectionTitle}>FAQs</Text>
-                {faqs.map((faq) => (
-                    <View key={faq.id} style={styles.faqContainer}>
-                        <TouchableOpacity onPress={() => toggleFAQ(faq.id)} style={styles.faqQuestionContainer}>
-                            <Text style={styles.faqQuestion}>{faq.question}</Text>
-                        </TouchableOpacity>
-                        {/* Respuesta desplegable */}
-                        {openFAQ === faq.id && (
-                            <View style={styles.faqAnswerContainer}>
-                                <Text style={styles.faqAnswer}>{faq.answer}</Text>
-                            </View>
-                        )}
-                    </View>
-                ))}
-            </View>
-        </ScrollView>
+            {/* Espacio adicional debajo del header */}
+            <View style={styles.headerSpace}></View>
+
+            {/* Contenido principal con ScrollView */}
+            <ScrollView contentContainerStyle={styles.contentContainer}>
+                {/* Sección de Contact Us */}
+                <View style={styles.section}>
+                    <Text style={styles.sectionTitle}>Contact Us</Text>
+                    <Text style={styles.text}>Email: support@carrentalapp.com</Text>
+                    <Text style={styles.text}>Phone: +1-234-567-8900</Text>
+                    <Text style={styles.text}>Address: 123 Main Street, Odense, Denmark</Text>
+                </View>
+
+                {/* Sección de FAQs */}
+                <View style={styles.section}>
+                    <Text style={styles.sectionTitle}>FAQs</Text>
+                    {faqs.map((faq) => (
+                        <View key={faq.id} style={styles.faqContainer}>
+                            <TouchableOpacity onPress={() => toggleFAQ(faq.id)} style={styles.faqQuestionContainer}>
+                                <Text style={styles.faqQuestion}>{faq.question}</Text>
+                            </TouchableOpacity>
+                            {openFAQ === faq.id && (
+                                <View style={styles.faqAnswerContainer}>
+                                    <Text style={styles.faqAnswer}>{faq.answer}</Text>
+                                </View>
+                            )}
+                        </View>
+                    ))}
+                </View>
+            </ScrollView>
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
+        backgroundColor: '#f4f4f9',
+    },
+    headerSpace: {
+        marginTop: 150, 
+    },
+    contentContainer: {
         padding: 20,
-        backgroundColor: '#f9f9f9',
     },
     section: {
         marginBottom: 20,
+        backgroundColor: '#ffffff',
+        borderRadius: 10,
+        padding: 15,
+        shadowColor: '#000',
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        shadowOffset: { width: 0, height: 2 },
     },
     sectionTitle: {
-        fontSize: 22,
+        fontSize: 20,
         fontWeight: 'bold',
         marginBottom: 10,
+        color: '#6836F5',
     },
     text: {
         fontSize: 16,
+        color: '#333',
         marginBottom: 5,
     },
     faqContainer: {
-        marginBottom: 10,
-        borderBottomWidth: 1,
-        borderBottomColor: '#ddd',
+        marginBottom: 15,
+        padding: 15,
+        borderWidth: 1,
+        borderRadius: 10,
+        borderColor: '#ddd',
+        backgroundColor: '#fff',
     },
     faqQuestionContainer: {
         paddingVertical: 10,
     },
     faqQuestion: {
         fontSize: 18,
-        fontWeight: 'bold',
-        color: '#007bff',
+        fontWeight: '500',
+        color: '#6836F5',
     },
     faqAnswerContainer: {
+        marginTop: 10,
         paddingVertical: 10,
+        paddingHorizontal: 15,
+        backgroundColor: '#e2e2ff',
+        borderRadius: 8,
     },
     faqAnswer: {
         fontSize: 16,
-        color: '#333',
+        color: '#555',
     },
 });
 
