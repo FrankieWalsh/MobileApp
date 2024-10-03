@@ -9,14 +9,36 @@
     "web": "expo start --web"
   },
   "dependencies": {
-    "expo": "~51.0.28",
+    "@react-native-assets/slider": "^7.2.1",
+    "@react-native-async-storage/async-storage": "^2.0.0",
+    "@react-native-community/datetimepicker": "8.0.1",
+    "@react-native-community/slider": "4.5.2",
+    "@react-native-picker/picker": "^2.8.1",
+    "@react-navigation/native": "^6.1.18",
+    "@react-navigation/stack": "^6.4.1",
+    "axios": "^1.7.7",
+    "bcrypt": "^5.1.1",
+    "expo": "^51.0.32",
     "expo-status-bar": "~1.12.1",
-    "react": "18.2.0",
-    "react-native": "0.74.5"
+    "jsonwebtoken": "^9.0.2",
+    "react": "^18.3.1",
+    "react-native": "^0.75.3",
+    "react-native-calendar-picker": "^8.0.5",
+    "react-native-calendars": "^1.1307.0",
+    "react-native-date-picker": "^5.0.7",
+    "react-native-fast-image": "^8.6.3",
+    "react-native-maps": "^1.18.0",
+    "react-native-picker-select": "^9.3.1",
+    "react-native-range-slider": "^0.1.2",
+    "react-native-range-slider-expo": "^1.4.3",
+    "react-native-reanimated": "^3.10.1",
+    "react-native-vector-icons": "^10.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@types/react": "~18.2.45",
+    "@types/react-native": "~0.67.6",
+    "expo-module-scripts": "^3.5.2",
     "typescript": "^5.1.3"
   },
   "private": true
