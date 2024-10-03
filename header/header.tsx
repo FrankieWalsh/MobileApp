@@ -1,8 +1,8 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; // Import icons
 import { getNotifications } from '../apiService'; // Use the refactored API call
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -35,17 +35,23 @@ const Header = ({ title }) => {
 
     return (
         <View style={styles.headerContainer}>
-            <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+            <TouchableOpacity style={styles.topBarIcon} onPress={() => navigation.navigate('Home')}>
                 <Image source={require('../assets/bilway.png')} style={styles.logo} />
             </TouchableOpacity>
-
+            <TouchableOpacity style={styles.topBarIcon} onPress={() => navigation.navigate('Support')}>
+                <Ionicons name="help-circle-outline" size={30} color="#000000" />
+            </TouchableOpacity>
             <TouchableOpacity onPress={() => navigation.navigate('Notifications')}>
                 <View style={styles.notificationContainer}>
-                    <Ionicons name="notifications-outline" size={24} color="black" />
+                    <Ionicons name="notifications-outline" size={30} color="#000000" />
                     {hasUnreadNotifications && <View style={styles.redDot} />}
                 </View>
             </TouchableOpacity>
+            <TouchableOpacity style={styles.topBarIcon} onPress={() => navigation.navigate('User')}>
+                <Ionicons name="person-outline" size={30} color="#000000" />
+            </TouchableOpacity>
         </View>
+
     );
 };
 
@@ -83,6 +89,20 @@ const styles = StyleSheet.create({
         position: 'absolute',
         right: 0,
         top: 0,
+    },
+    topBar: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingHorizontal: 20,
+        paddingVertical: 18,
+        backgroundColor: '#1C146B',
+        borderBottomWidth: 1,
+        borderBottomColor: '#ddd',
+    },
+    topBarIcon: {
+        paddingVertical: 5,
+        paddingHorizontal: 10,
     },
 });
 

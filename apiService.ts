@@ -1,7 +1,7 @@
 import axios from 'axios';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const BASE_URL = 'http://192.168.111.3:5000/api'; // Adjust to your correct server IP
+const BASE_URL = 'http://10.126.51.239:5000/api'; // Adjust to your correct server IP
 
 // Get list of cars
 export const getCars = async () => {
