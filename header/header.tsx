@@ -35,21 +35,26 @@ const Header = ({ title }) => {
 
     return (
         <View style={styles.headerContainer}>
+            <View style={styles.leftButtons}>
             <TouchableOpacity style={styles.topBarIcon} onPress={() => navigation.navigate('Home')}>
-                <Image source={require('../assets/bilway.png')} style={styles.logo} />
+                <Image source={require('../assets/LogoBilway_White.png')} style={styles.logo} />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.topBarIcon} onPress={() => navigation.navigate('Support')}>
-                <Ionicons name="help-circle-outline" size={30} color="#000000" />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate('Notifications')}>
-                <View style={styles.notificationContainer}>
-                    <Ionicons name="notifications-outline" size={30} color="#000000" />
-                    {hasUnreadNotifications && <View style={styles.redDot} />}
-                </View>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.topBarIcon} onPress={() => navigation.navigate('User')}>
-                <Ionicons name="person-outline" size={30} color="#000000" />
-            </TouchableOpacity>
+            </View>
+
+            <View style={styles.rightButtons}>
+                <TouchableOpacity style={styles.topBarIcon} onPress={() => navigation.navigate('Support')}>
+                    <Ionicons name="help-circle-outline" size={30} color="#fff" />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.topBarIcon} onPress={() => navigation.navigate('Notifications')}>
+                    <View style={styles.notificationContainer}>
+                        <Ionicons name="notifications-outline" size={30} color="#fff" />
+                        {hasUnreadNotifications && <View style={styles.redDot} />}
+                    </View>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.topBarIcon} onPress={() => navigation.navigate('User')}>
+                    <Ionicons name="person-outline" size={30} color="#fff" />
+                </TouchableOpacity>
+            </View>
         </View>
 
     );
@@ -58,7 +63,6 @@ const Header = ({ title }) => {
 const styles = StyleSheet.create({
     headerContainer: {
         width: '100',
-        backgroundColor: '#fff',
         padding: 20,
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -70,6 +74,10 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
         zIndex: 1000,
+        paddingHorizontal: 20,
+        paddingVertical: 28,
+        backgroundColor: '#1C146B',
+        marginBottom: 60,
     },
     logo: {
         marginLeft: 10,
@@ -77,6 +85,14 @@ const styles = StyleSheet.create({
         width: 120,
         height: 50,
         resizeMode: 'contain',
+    },
+    leftButtons: {
+        top: 10,
+        right: 30,
+    },
+    rightButtons: {
+        top: 28,
+        flexDirection: 'row',
     },
     notificationContainer: {
         position: 'relative',
@@ -89,16 +105,6 @@ const styles = StyleSheet.create({
         position: 'absolute',
         right: 0,
         top: 0,
-    },
-    topBar: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        paddingHorizontal: 20,
-        paddingVertical: 18,
-        backgroundColor: '#1C146B',
-        borderBottomWidth: 1,
-        borderBottomColor: '#ddd',
     },
     topBarIcon: {
         paddingVertical: 5,

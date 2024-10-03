@@ -104,6 +104,7 @@ const CarListScreen: React.FC = ({ navigation }: any) => {
     return (
         <View style={styles.container}>
             <Header/>
+            <View style={styles.headerSpace}></View>
             <FilterComponent
                 minPrice={minPrice}
                 setMinPrice={setMinPrice}
@@ -141,6 +142,9 @@ const styles = StyleSheet.create({
     },
     row: {
         justifyContent: 'space-between',
+    },
+    headerSpace: {
+        marginTop: 35,
     },
     card: {
         margin: 7,

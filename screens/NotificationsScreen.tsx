@@ -45,6 +45,7 @@ const NotificationsScreen = () => {
     return (
         <View style={styles.container}>
             <Header></Header>
+            <View style={styles.headerSpace}></View>
             <FlatList
                 data={notifications}
                 renderItem={({ item }) => (
@@ -78,38 +79,47 @@ const NotificationsScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingHorizontal: 20,
-        paddingVertical: 20,
         backgroundColor: '#f4f4f9',
     },
+    headerSpace: {
+        marginTop: 55,
+    },
     listContainer: {
-        marginTop: 110,
+        paddingTop: 110,  // Espacio para el header
+        paddingHorizontal: 20,
         flexGrow: 1,
-        paddingBottom: 80, // Space for the home button
+        paddingBottom: 100, // Espacio para el botón de inicio
     },
     notificationItem: {
-        padding: 20,
-        marginBottom: 10,
-        borderRadius: 8,
-        elevation: 2,
-        flexDirection: 'column',
-        justifyContent: 'space-between',
+        padding: 15,
+        marginVertical: 8,
+        borderRadius: 10,
+        elevation: 3,
+        shadowColor: '#000',
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        shadowOffset: { width: 0, height: 2 },
     },
     unread: {
-        backgroundColor: '#f9f9f9',
+        backgroundColor: '#ffffff',
+        borderColor: '#6836F5',
+        borderWidth: 1,
     },
     read: {
-        backgroundColor: '#e0e0e0',
+        backgroundColor: '#ececff',
+        borderColor: '#c2c2f0',
+        borderWidth: 1,
     },
     message: {
         fontSize: 16,
-        fontWeight: 'bold',
+        fontWeight: '500',
+        color: '#333',
     },
     detailsContainer: {
-        marginTop: 10,
+        marginTop: 8,
         padding: 10,
-        backgroundColor: '#e8e8e8',
-        borderRadius: 5,
+        backgroundColor: '#e2e2ff',
+        borderRadius: 8,
     },
     details: {
         fontSize: 14,
@@ -120,11 +130,16 @@ const styles = StyleSheet.create({
         paddingVertical: 15,
         justifyContent: 'center',
         alignItems: 'center',
-        borderRadius: 20,
+        borderRadius: 25,
+        marginHorizontal: 20,
         position: 'absolute',
-        bottom: 60,
-        left: 20,
-        right: 20,
+        bottom: 30,
+        left: 0,
+        right: 0,
+        shadowColor: '#000',
+        shadowOpacity: 0.2,
+        shadowRadius: 8,
+        shadowOffset: { width: 0, height: 2 },
     },
     homeButtonText: {
         color: '#fff',

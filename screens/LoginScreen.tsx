@@ -43,7 +43,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
     };
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <View style={styles.logoContainer}>
                 <Image source={require('../assets/LogoBilway_White.png')} style={{ width: 300, height: 150, alignSelf: 'center', marginBottom: 20 }} />
             </View>
@@ -83,7 +83,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
             <TouchableOpacity style={styles.signUpButton} onPress={() => navigation.navigate('SignUp')}>
                 <Text style={styles.signUpText}>Sign Up</Text>
             </TouchableOpacity>
-        </SafeAreaView>
+        </View>
     );
 };
 
@@ -92,6 +92,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#1C146B',
         justifyContent: 'center',
+        paddingHorizontal: 30,
     },
     logoContainer: {
         alignItems: 'center',
@@ -115,12 +116,14 @@ const styles = StyleSheet.create({
         marginBottom: 40,
     },
     inputContainer: {
+        width: '100%',
+        alignSelf: 'center',
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: '#fff',
-        borderRadius: 10,
+        borderRadius: 25,
         paddingHorizontal: 15,
-        paddingVertical: 12,
+        paddingVertical: 14,
         marginBottom: 20,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
@@ -143,6 +146,7 @@ const styles = StyleSheet.create({
         borderRadius: 25,
         alignItems: 'center',
         margin: 10,
+        marginHorizontal: 20,
     },
     buttonText: {
         color: '#fff',
@@ -156,6 +160,7 @@ const styles = StyleSheet.create({
         borderColor: '#fff',
         borderWidth: 1,
         margin: 10,
+        marginHorizontal: 20,
     },
     signUpText: {
         color: '#fff',
