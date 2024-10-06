@@ -35,8 +35,10 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
                 await AsyncStorage.setItem('userName', response.name);
                 await AsyncStorage.setItem('userEmail', email);
                 
-                Alert.alert('Success', 'Login successful');
-                navigation.navigate('Home');
+                navigation.reset({
+                    index: 0,
+                    routes: [{ name: 'Home' }],
+                });
             }
         } catch (error) {
             Alert.alert('Error', 'Invalid login credentials');

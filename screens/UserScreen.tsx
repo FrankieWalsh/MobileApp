@@ -3,12 +3,15 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert, ScrollView,
 import Header from "../header/header";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { updateUserDetails } from '../apiService';  // Ensure updateUserDetails is correctly imported
+import { useNavigation } from '@react-navigation/native';  // Import useNavigation
 
 const UserScreen = () => {
     const [userName, setUserName] = useState('');
     const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(true);
     const [isEditing, setIsEditing] = useState(false);
+
+    const navigation = useNavigation();  // Get the navigation object
 
     // Fetch user data from AsyncStorage
     const fetchUserData = async () => {
@@ -65,10 +68,24 @@ const UserScreen = () => {
         try {
             await AsyncStorage.clear();
             Alert.alert('Logged Out', 'You have been logged out successfully.');
+    
+            // Reset navigation stack to remove the back option
+            navigation.reset({
+                index: 0,
+                routes: [{ name: 'Login' }],
+            });
         } catch (error) {
             console.error('Error during logout:', error);
         }
     };
+
+    if (loading) {
+        return (
+            <View style={styles.loaderContainer}>
+                <ActivityIndicator size="large" color="#6836F5" />
+            </View>
+        );
+    }
 
     if (loading) {
         return (

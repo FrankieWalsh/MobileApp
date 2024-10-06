@@ -36,22 +36,35 @@ const Header = ({ title }) => {
     return (
         <View style={styles.headerContainer}>
             <View style={styles.leftButtons}>
-            <TouchableOpacity style={styles.topBarIcon} onPress={() => navigation.navigate('Home')}>
+            <TouchableOpacity style={styles.topBarIcon} onPress={() => navigation.reset({
+                                        index: 0,
+                                        routes: [{ name: 'Home' }],
+                                    })}>
                 <Image source={require('../assets/LogoBilway_White.png')} style={styles.logo} />
             </TouchableOpacity>
             </View>
 
             <View style={styles.rightButtons}>
-                <TouchableOpacity style={styles.topBarIcon} onPress={() => navigation.navigate('Support')}>
+                <TouchableOpacity style={styles.topBarIcon} onPress={() => 
+                                    navigation.reset({
+                                        index: 0,
+                                        routes: [{ name: 'Support' }],
+                                    })}>
                     <Ionicons name="help-circle-outline" size={30} color="#fff" />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.topBarIcon} onPress={() => navigation.navigate('Notifications')}>
+                <TouchableOpacity style={styles.topBarIcon} onPress={() => navigation.reset({
+                                        index: 0,
+                                        routes: [{ name: 'Notifications' }],
+                                    })}>
                     <View style={styles.notificationContainer}>
                         <Ionicons name="notifications-outline" size={30} color="#fff" />
                         {hasUnreadNotifications && <View style={styles.redDot} />}
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.topBarIcon} onPress={() => navigation.navigate('User')}>
+                <TouchableOpacity style={styles.topBarIcon} onPress={() => navigation.reset({
+                                        index: 0,
+                                        routes: [{ name: 'User' }],
+                                    })}>
                     <Ionicons name="person-outline" size={30} color="#fff" />
                 </TouchableOpacity>
             </View>
