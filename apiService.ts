@@ -1,7 +1,7 @@
 import axios from 'axios';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const BASE_URL = 'http://10.141.96.58:5000/api'; // Adjust to your correct server IP
+export const BASE_URL = 'http://10.141.96.115:5000/api'; // Adjust to your correct server IP
 
 // Get list of cars
 export const getCars = async () => {
@@ -142,6 +142,16 @@ export const sendNotification = async (notificationDetails) => {
         return response.data;
     } catch (error) {
         console.error('Error sending notification:', error);
+        throw error;
+    }
+};
+
+export const updateUserDetails = async (userId, updatedData) => {
+    try {
+        const response = await axios.put(`${BASE_URL}/user/${userId}`, updatedData);
+        return response.data;
+    } catch (error) {
+        console.error('Error updating user details:', error);
         throw error;
     }
 };

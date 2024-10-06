@@ -76,4 +76,42 @@ router.get('/', async (req, res) => {
     }
 });
 
+// PUT: Update a user's name and email by ID
+router.put('/:userId', async (req, res) => {
+    const { userId } = req.params;
+    const { name, email } = req.body;
+
+    try {
+        // Check if the user exists
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ status: 404, message: 'User not found' });
+        }
+
+        // Check if the email is already in use by another user
+        if (email !== user.email) {
+            const existingUser = await User.findOne({ email });
+            if (existingUser) {
+                return res.status(400).json({ status: 400, message: 'Email already in use by another account' });
+            }
+        }
+
+        // Update the user's name and email
+        user.name = name || user.name;  // Keep the existing name if none provided
+        user.email = email || user.email;  // Keep the existing email if none provided
+
+        const updatedUser = await user.save();
+        res.status(200).json({
+            status: 200,
+            message: 'User updated successfully',
+            userId: updatedUser._id,
+            name: updatedUser.name,
+            email: updatedUser.email,
+        });
+    } catch (err) {
+        res.status(500).json({ status: 500, message: err.message });
+    }
+});
+
+
 module.exports = router;

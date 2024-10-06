@@ -2,58 +2,59 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert, ScrollView, ActivityIndicator } from 'react-native';
 import Header from "../header/header";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';  // Para conectar con tu API backend
+import { updateUserDetails } from '../apiService';  // Ensure updateUserDetails is correctly imported
 
 const UserScreen = () => {
     const [userName, setUserName] = useState('');
     const [email, setEmail] = useState('');
-    const [preferences, setPreferences] = useState({});
-    const [paymentDetails, setPaymentDetails] = useState({});
     const [loading, setLoading] = useState(true);
     const [isEditing, setIsEditing] = useState(false);
 
-    // Función para obtener los datos del usuario
+    // Fetch user data from AsyncStorage
     const fetchUserData = async () => {
         try {
-            // Recuperar nombre de usuario desde AsyncStorage
             const name = await AsyncStorage.getItem('userName');
             setUserName(name || 'User');
 
-            // no se recuperan correctamente
-            // Recuperar correo electrónico desde AsyncStorage
             const userEmail = await AsyncStorage.getItem('userEmail');
             setEmail(userEmail || 'user@example.com');
-
-            // Recuperar preferencias y detalles de pago (si se almacenan en el backend o en AsyncStorage)
-            const storedPreferences = await AsyncStorage.getItem('userPreferences');
-            setPreferences(storedPreferences ? JSON.parse(storedPreferences) : {});
-
-            const storedPaymentDetails = await AsyncStorage.getItem('userPaymentDetails');
-            setPaymentDetails(storedPaymentDetails ? JSON.parse(storedPaymentDetails) : {});
         } catch (error) {
             console.error('Error loading user data:', error);
             Alert.alert('Error', 'Failed to load user data.');
         } finally {
-            setLoading(false);  // Finalizar la carga
+            setLoading(false);
         }
     };
 
-    // Llamar a fetchUserData cuando se monte el componente
     useEffect(() => {
         fetchUserData();
     }, []);
 
     const handleUpdate = async () => {
         try {
-            // Aquí puedes realizar la actualización de los datos del usuario
-            // Almacenar los datos en AsyncStorage después de editar
-            await AsyncStorage.setItem('userName', userName);
-            await AsyncStorage.setItem('userEmail', email);
-            await AsyncStorage.setItem('userPreferences', JSON.stringify(preferences));
-            await AsyncStorage.setItem('userPaymentDetails', JSON.stringify(paymentDetails));
+            const userId = await AsyncStorage.getItem('userId');
 
-            Alert.alert('Success', 'User information updated successfully!');
-            setIsEditing(false);
+            // Verify if userId exists
+            if (!userId) {
+                Alert.alert('Error', 'User ID not found in local storage.');
+                return;
+            }
+
+            const updatedData = { name: userName, email: email };
+            const response = await updateUserDetails(userId, updatedData);  // Send request to backend
+
+            // Check if the server responded with a success message
+            if (response && response.status === 200) {
+                // Update local AsyncStorage if backend update was successful
+                await AsyncStorage.setItem('userName', userName);
+                await AsyncStorage.setItem('userEmail', email);
+
+                Alert.alert('Success', 'User information updated successfully!');
+                setIsEditing(false);
+            } else {
+                console.error('Failed to update on server:', response);
+                Alert.alert('Error', 'Failed to update user information on the server.');
+            }
         } catch (error) {
             console.error('Error updating user data:', error);
             Alert.alert('Error', 'Failed to update user information.');
@@ -62,15 +63,13 @@ const UserScreen = () => {
 
     const handleLogout = async () => {
         try {
-            await AsyncStorage.clear();  // Limpiar AsyncStorage al cerrar sesión
+            await AsyncStorage.clear();
             Alert.alert('Logged Out', 'You have been logged out successfully.');
-            // Aquí podrías redirigir a la pantalla de inicio de sesión
         } catch (error) {
             console.error('Error during logout:', error);
         }
     };
 
-    // Pantalla de carga mientras se recupera la información del usuario
     if (loading) {
         return (
             <View style={styles.loaderContainer}>
@@ -84,11 +83,12 @@ const UserScreen = () => {
             {/* Header */}
             <Header />
             <View style={styles.headerSpace}></View>
-            {/* Contenido principal */}
+
+            {/* Main Content */}
             <ScrollView contentContainerStyle={styles.contentContainer}>
                 <Text style={styles.title}>User Profile</Text>
 
-                {/* Información del usuario */}
+                {/* User Information Section */}
                 <View style={styles.userInfoSection}>
                     <Text style={styles.label}>Name:</Text>
                     {isEditing ? (
@@ -114,33 +114,9 @@ const UserScreen = () => {
                     ) : (
                         <Text style={styles.text}>{email}</Text>
                     )}
-
-                    <Text style={styles.label}>Preferences:</Text>
-                    {isEditing ? (
-                        <TextInput
-                            style={styles.input}
-                            value={JSON.stringify(preferences)}
-                            onChangeText={(text) => setPreferences(JSON.parse(text))}
-                            placeholder="Enter your preferences"
-                        />
-                    ) : (
-                        <Text style={styles.text}>{JSON.stringify(preferences) || 'No preferences set.'}</Text>
-                    )}
-
-                    <Text style={styles.label}>Payment Details:</Text>
-                    {isEditing ? (
-                        <TextInput
-                            style={styles.input}
-                            value={JSON.stringify(paymentDetails)}
-                            onChangeText={(text) => setPaymentDetails(JSON.parse(text))}
-                            placeholder="Enter your payment details"
-                        />
-                    ) : (
-                        <Text style={styles.text}>{JSON.stringify(paymentDetails) || 'No payment details set.'}</Text>
-                    )}
                 </View>
 
-                {/* Botones de acción */}
+                {/* Action Buttons */}
                 <View style={styles.buttonContainer}>
                     {isEditing ? (
                         <TouchableOpacity style={styles.button} onPress={handleUpdate}>
@@ -166,7 +142,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#f4f4f9',
     },
     headerSpace: {
-        marginTop: 75,
+        marginTop: 125,
     },
     contentContainer: {
         padding: 20,

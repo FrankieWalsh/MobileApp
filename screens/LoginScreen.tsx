@@ -33,7 +33,8 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
             if (response.token) {
                 await AsyncStorage.setItem('userId', response.userId);
                 await AsyncStorage.setItem('userName', response.name);
-
+                await AsyncStorage.setItem('userEmail', email);
+                
                 Alert.alert('Success', 'Login successful');
                 navigation.navigate('Home');
             }
