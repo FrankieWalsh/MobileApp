@@ -155,3 +155,14 @@ export const updateUserDetails = async (userId, updatedData) => {
         throw error;
     }
 };
+
+// Cancel a booking by ID
+export const cancelBooking = async (bookingId) => {
+    try {
+        const response = await axios.delete(`${BASE_URL}/bookings/${bookingId}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error cancelling booking:', error);
+        throw error;
+    }
+};

@@ -94,31 +94,56 @@ const BookingScreen = ({ route, navigation }) => {
             Alert.alert('Error', 'You must be logged in to book a car.');
             return;
         }
+        if (!startDate) {
+            Alert.alert('Error', 'Please select a rental start date.');
+            return;
+        }
+        if (!endDate) {
+            Alert.alert('Error', 'Please select a rental end date.');
+            return;
+        }
+        if (!pickupLocation) {
+            Alert.alert('Error', 'Pickup location is not set.');
+            return;
+        }
+        if (!dropOffLocation) {
+            Alert.alert('Error', 'Please select a drop-off location.');
+            return;
+        }
 
+        // Construct booking details object
         const bookingDetails = {
             rentalStartDate: startDate ? startDate.toISOString() : '',
             rentalEndDate: endDate ? endDate.toISOString() : '',
             pickupLocation,
             dropOffLocation,
-            userId
+            userId,
         };
 
         try {
+            // Make the booking API call
             const bookingResponse = await bookCar(carId, bookingDetails);
 
-            const notificationDetails = {
-                user_id: userId,
-                message: `Your booking for ${bookingResponse.car.model} is confirmed! Pickup: ${bookingResponse.pickupLocation}, Drop-off: ${bookingResponse.dropOffLocation}.`
-            };
+            // Check the response structure to confirm booking
+            if (bookingResponse && bookingResponse.success) {
+                const notificationDetails = {
+                    user_id: userId,
+                    message: `Your booking for ${bookingResponse.booking.car_id.model} is confirmed! Pickup: ${pickupLocation}, Drop-off: ${dropOffLocation}.`
+                };
 
-            await sendNotification(notificationDetails);
-
-            Alert.alert('Booking Confirmed', 'Your car has been booked successfully.');
-            navigation.navigate('Home');
+                // Show success alert and navigate back to Home
+                Alert.alert('Booking Confirmed', 'Your car has been booked successfully.');
+                navigation.navigate('Home');
+            } else {
+                console.error('Failed to book on server:', bookingResponse);
+                Alert.alert('Error', 'Failed to book the car. Please try again.');
+            }
         } catch (error) {
+            console.error('Booking error:', error);
             Alert.alert('Error', 'Failed to book the car. Please try again.');
         }
     };
+
 
     if (loading) {
         return <ActivityIndicator size="large" />;
