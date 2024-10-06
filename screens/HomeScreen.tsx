@@ -68,8 +68,9 @@ const HomeScreen = ({ navigation }) => {
     }
 
     return (
+        <View style={styles.container2}>
+        <Header />
         <View style={styles.container}>
-            <Header />
             <Text style={styles.title}>Welcome, {userName}!</Text>
             <Text style={styles.subtitle}>Find your perfect car now!</Text>
             <ScrollView contentContainerStyle={styles.scrollViewContainer}>
@@ -127,10 +128,14 @@ const HomeScreen = ({ navigation }) => {
             )}
             </ScrollView>
         </View>
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
+    container2: {
+        flex: 1,
+    },
     container: {
         flex: 1,
         backgroundColor: '#f4f4f4',

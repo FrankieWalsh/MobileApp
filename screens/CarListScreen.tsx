@@ -3,6 +3,7 @@ import { Image, View, FlatList, Text, TouchableOpacity, StyleSheet, ActivityIndi
 import { getCars } from '../apiService';
 import FilterComponent from '../FilterComponent';
 import Header from "../header/header";
+import { useNavigation } from '@react-navigation/native';  // Import useNavigation
 
 const imageMap = {
     'white-tesla.png': require('../assets/cars/white-tesla.png'),
@@ -127,6 +128,10 @@ const CarListScreen: React.FC = ({ navigation }: any) => {
                 columnWrapperStyle={styles.row}
                 contentContainerStyle={styles.listContainer}
             />
+                        {/* Add a Home button at the bottom */}
+                        <TouchableOpacity style={styles.homeButton} onPress={() => navigation.navigate('Home')}>
+                <Text style={styles.homeButtonText}>Go to Home</Text>
+            </TouchableOpacity>
         </View>
     );
 };
@@ -190,6 +195,27 @@ const styles = StyleSheet.create({
     },
     pricePerDay: {
         color: '#F6F5FA',
+    },
+    homeButton: {
+        backgroundColor: '#6836F5',
+        paddingVertical: 15,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 25,
+        marginHorizontal: 20,
+        position: 'absolute',
+        bottom: 30,
+        left: 0,
+        right: 0,
+        shadowColor: '#000',
+        shadowOpacity: 0.2,
+        shadowRadius: 8,
+        shadowOffset: { width: 0, height: 2 },
+    },
+    homeButtonText: {
+        color: '#fff',
+        fontSize: 18,
+        fontWeight: 'bold',
     },
 });
 

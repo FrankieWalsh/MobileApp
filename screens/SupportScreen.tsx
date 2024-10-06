@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import Header from "../header/header";  // Asegúrate de importar el Header
+import { useNavigation } from '@react-navigation/native';  // Import useNavigation
 
 const SupportScreen: React.FC = () => {
     const [openFAQ, setOpenFAQ] = useState<number | null>(null);
+    const navigation = useNavigation();
 
     const faqs = [
         {
@@ -62,6 +64,10 @@ const SupportScreen: React.FC = () => {
                     ))}
                 </View>
             </ScrollView>
+            {/* Add a Home button at the bottom */}
+            <TouchableOpacity style={styles.homeButton} onPress={() => navigation.navigate('Home')}>
+                <Text style={styles.homeButtonText}>Go to Home</Text>
+            </TouchableOpacity>
         </View>
     );
 };
@@ -72,7 +78,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#f4f4f9',
     },
     headerSpace: {
-        marginTop: 150, 
+        marginTop: 150,
     },
     contentContainer: {
         padding: 20,
@@ -125,6 +131,28 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#555',
     },
+    homeButton: {
+        backgroundColor: '#6836F5',
+        paddingVertical: 15,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 25,
+        marginHorizontal: 20,
+        position: 'absolute',
+        bottom: 30,
+        left: 0,
+        right: 0,
+        shadowColor: '#000',
+        shadowOpacity: 0.2,
+        shadowRadius: 8,
+        shadowOffset: { width: 0, height: 2 },
+    },
+    homeButtonText: {
+        color: '#fff',
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+
 });
 
 export default SupportScreen;
