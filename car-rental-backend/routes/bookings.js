@@ -9,7 +9,6 @@ const Location = require('../models/Location');
 // POST a new booking
 router.post('/', async (req, res) => {
     const { carId, rentalStartDate, rentalEndDate, pickupLocation, dropOffLocation, userId } = req.body;
-    console.log(req.body)
 
     try {
         const car = await Car.findById(carId);
@@ -36,7 +35,6 @@ router.post('/', async (req, res) => {
             user_id: userId,
             status: 'confirmed'
         });
-        console.log(booking)
 
         // Save the new booking
         const newBooking = await booking.save();
@@ -47,21 +45,26 @@ router.post('/', async (req, res) => {
 
         // Send notification to the user with the actual address
         const notificationMessage = `Your booking for ${car.model} is confirmed. Pickup: ${populatedPickupLocation.address}, Drop-off: ${populatedDropOffLocation.address}.`;
-        console.log(notificationMessage)
         const notification = new Notifications({
             user_id: userId,
             details: notificationMessage,
             message: `Booking Confirmation for ${car.model} (Booking ID: ${newBooking._id})`,
         });
-        console.log(notification)
 
         await notification.save(); // Save the notification
 
-        res.status(201).json(newBooking);
+        // Ensure we send a proper 201 status and the correct JSON response
+        return res.status(201).json({
+            success: true,  // Add a "success" property to check in the frontend
+            booking: newBooking,
+            notificationMessage,
+        });
     } catch (err) {
+        console.error("Error creating booking:", err); // Log for debugging
         res.status(400).json({ message: err.message });
     }
 });
+
 
 // GET all bookings
 router.get('/', async (req, res) => {
@@ -138,5 +141,32 @@ router.delete('/all', async (req, res) => {
     }
 });
 
+// DELETE a booking by ID
+router.delete('/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        // Find the booking by its ID
+        const booking = await Booking.findById(id);
+
+        if (!booking) {
+            return res.status(404).json({ message: 'Booking not found' });
+        }
+
+        // Find the car related to the booking and set availability to true
+        const car = await Car.findById(booking.car_id);
+        if (car) {
+            car.availability = true; // Set the car as available again
+            await car.save();
+        }
+
+        // Delete the booking
+        await booking.deleteOne();
+
+        res.status(200).json({ message: 'Booking cancelled successfully' });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
 
 module.exports = router;

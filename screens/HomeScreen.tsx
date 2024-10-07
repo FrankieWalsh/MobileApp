@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, ActivityIndicator, ScrollView } from 'react-native';
-import { getUserBooking } from '../apiService';
+import { View, Text, TouchableOpacity, StyleSheet, Alert, Image, ActivityIndicator, ScrollView } from 'react-native';
+import { getUserBooking, cancelBooking  } from '../apiService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from '../header/header';
 import { useFocusEffect } from '@react-navigation/native';
@@ -63,74 +63,90 @@ const HomeScreen = ({ navigation }) => {
         }
     };
 
+    // Function to handle the cancellation of a booking
+    const handleCancelBooking = async (bookingId) => {
+        try {
+            await cancelBooking(bookingId);  // Call the API to cancel the booking
+            Alert.alert('Success', 'Booking has been cancelled.');
+
+            // Update the state to reflect the cancelled booking
+            setBookings(bookings.filter(booking => booking._id !== bookingId));
+        } catch (error) {
+            Alert.alert('Error', 'Failed to cancel the booking. Please try again.');
+        }
+    };
+
     if (loading) {
         return <ActivityIndicator size="large" />;
     }
 
     return (
-        <View style={styles.container}>
+        <View style={styles.container2}>
             <Header />
-            <Text style={styles.title}>Welcome, {userName}!</Text>
-            <Text style={styles.subtitle}>Find your perfect car now!</Text>
-            <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+            <View style={styles.container}>
+                <Text style={styles.title}>Welcome, {userName}!</Text>
+                <Text style={styles.subtitle}>Find your perfect car now!</Text>
+                <ScrollView contentContainerStyle={styles.scrollViewContainer}>
 
-            <TouchableOpacity style={styles.bigButton} onPress={() => navigation.navigate('CarList')}>
-                <View style={styles.bigButtonContent}>
-                    <Text style={styles.buttonMainText}>Available Cars</Text>
-                    <Text style={styles.buttonSubText}>Long term, Short term</Text>
-                    <View style={styles.arrowContainer}>
-                        <Text style={styles.arrowText}>→</Text>
-                    </View>
-                </View>
-            </TouchableOpacity>
-
-            {/* Display all bookings */}
-            <Text style={styles.title}>Booked cars:</Text>
-            {bookings.length > 0 ? (
-                bookings.map((booking) => (
-                    <View key={booking._id} style={styles.carCard}>
-                        <TouchableOpacity onPress={() => toggleBookingDetails(booking._id)}>
-                            <View style={styles.carHeader}>
-                                <Image source={getImageForCar(booking.car_id.image)} style={styles.carImage} />
-                                <View style={styles.carDetails}>
-                                    <Text style={styles.carName}>{booking.car_id.model}</Text>
-                                    <Text style={styles.carBrand}>{booking.car_id.brand}</Text>
-                                </View>
-                                {/* Arrow to indicate expand/collapse */}
-                                <Text style={styles.arrow}>{expandedBookingId === booking._id ? '↑' : '↓'}</Text>
+                    <TouchableOpacity style={styles.bigButton} onPress={() => navigation.navigate('CarList')}>
+                        <View style={styles.bigButtonContent}>
+                            <Text style={styles.buttonMainText}>Available Cars</Text>
+                            <Text style={styles.buttonSubText}>Long term, Short term</Text>
+                            <View style={styles.arrowContainer}>
+                                <Text style={styles.arrowText}>→</Text>
                             </View>
-                        </TouchableOpacity>
+                        </View>
+                    </TouchableOpacity>
 
-                        {/* If this booking is expanded, show more details */}
-                        {expandedBookingId === booking._id && (
-                            <View style={styles.expandedDetails}>
-                                <Text style={styles.detailText}>
-                                    Pickup Location: {booking.pickup_location_id.address}
-                                </Text>
-                                <Text style={styles.detailText}>
-                                    Rental Start: {new Date(booking.rental_start_date).toLocaleDateString()}
-                                </Text>
-                                <Text style={styles.detailText}>
-                                    Rental End: {new Date(booking.rental_end_date).toLocaleDateString()}
-                                </Text>
-                                {/*<TouchableOpacity*/}
-                                {/*    onPress={() => navigation.navigate('BookingConfirmation', { carId: booking.car_id._id })}*/}
-                                {/*>*/}
-                                {/*    <Text style={styles.garageLink}>View Booking</Text>*/}
-                                {/*</TouchableOpacity>*/}
+                    {/* Display all bookings */}
+                    <Text style={styles.title}>Booked cars:</Text>
+                    {bookings.length > 0 ? (
+                        bookings.map((booking) => (
+                            <View key={booking._id} style={styles.carCard}>
+                                <TouchableOpacity onPress={() => toggleBookingDetails(booking._id)}>
+                                    <View style={styles.carHeader}>
+                                        <Image source={getImageForCar(booking.car_id.image)} style={styles.carImage} />
+                                        <View style={styles.carDetails}>
+                                            <Text style={styles.carName}>{booking.car_id.model}</Text>
+                                            <Text style={styles.carBrand}>{booking.car_id.brand}</Text>
+                                        </View>
+                                        <Text style={styles.arrow}>{expandedBookingId === booking._id ? '↑' : '↓'}</Text>
+                                    </View>
+                                </TouchableOpacity>
+
+                                {expandedBookingId === booking._id && (
+                                    <View style={styles.expandedDetails}>
+                                        <Text style={styles.detailText}>
+                                            Pickup Location: {booking.pickup_location_id.address}
+                                        </Text>
+                                        <Text style={styles.detailText}>
+                                            Rental Start: {new Date(booking.rental_start_date).toLocaleDateString()}
+                                        </Text>
+                                        <Text style={styles.detailText}>
+                                            Rental End: {new Date(booking.rental_end_date).toLocaleDateString()}
+                                        </Text>
+
+                                        {/* Add the cancel booking button */}
+                                        <TouchableOpacity onPress={() => handleCancelBooking(booking._id)}>
+                                            <Text style={styles.cancelButton}>Cancel Booking</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                )}
                             </View>
-                        )}
-                    </View>
-                ))
-            ) : (
-                <Text>No cars booked currently.</Text>
-            )}
-            </ScrollView>
+                        ))
+                    ) : (
+                        <Text>No cars booked currently.</Text>
+                    )}
+                </ScrollView>
+            </View>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
+    container2: {
+        flex: 1,
+    },
     container: {
         flex: 1,
         backgroundColor: '#f4f4f4',
@@ -145,6 +161,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 10,
         color: '#333',
+        marginTop: 35,
     },
     subtitle: {
         fontSize: 18,
@@ -241,6 +258,12 @@ const styles = StyleSheet.create({
         color: '#6836F5',
         fontSize: 20,
         fontWeight: 'bold',
+    },
+    cancelButton: {
+        fontSize: 14,
+        color: 'red',  // Red text color for the cancel button
+        textDecorationLine: 'underline',
+        marginTop: 10,
     },
 });
 

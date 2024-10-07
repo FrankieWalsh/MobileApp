@@ -3,6 +3,7 @@ import {View, Text, Button, StyleSheet, TextInput, Alert, TouchableOpacity} from
 import { signUpUser } from '../apiService'; // Import the signUpUser function
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type RootStackParamList = {
     SignUp: undefined;
@@ -35,6 +36,7 @@ const SignUpScreen: React.FC<Props> = ({ navigation }) => {
             if (response.status === 201) {
                 Alert.alert('Success', 'Account created successfully');
                 navigation.replace('Login'); // Navigate back to Login after signup
+                //await AsyncStorage.setItem('userEmail', email);
             }
         } catch (error) {
             console.error(error);
