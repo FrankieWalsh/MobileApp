@@ -3,6 +3,7 @@ import {View, Text, Button, StyleSheet, TextInput, Alert, TouchableOpacity} from
 import { signUpUser } from '../apiService'; // Import the signUpUser function
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type RootStackParamList = {
     SignUp: undefined;
@@ -35,6 +36,7 @@ const SignUpScreen: React.FC<Props> = ({ navigation }) => {
             if (response.status === 201) {
                 Alert.alert('Success', 'Account created successfully');
                 navigation.replace('Login'); // Navigate back to Login after signup
+                //await AsyncStorage.setItem('userEmail', email);
             }
         } catch (error) {
             console.error(error);
@@ -84,6 +86,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 30,
     },
     title: {
+        fontFamily: "Montserrat-Bold",
         fontSize: 32,
         fontWeight: 'bold',
         color: '#FFFFFF',
@@ -91,6 +94,7 @@ const styles = StyleSheet.create({
         marginBottom: 40,
     },
     input: {
+        fontFamily: "Montserrat-Medium",
         height: 50,
         backgroundColor: '#fff',
         borderRadius: 25,
@@ -107,6 +111,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     buttonText: {
+        fontFamily: "Montserrat-Bold",
         color: '#fff',
         fontSize: 18,
         fontWeight: 'bold',
@@ -116,6 +121,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     loginText: {
+        fontFamily: "Montserrat-Medium",
         color: '#fff',
         fontSize: 16,
         textDecorationLine: 'underline',

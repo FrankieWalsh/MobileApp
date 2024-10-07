@@ -9,29 +9,10 @@ import Animated, {
 import { getCarDetails } from '../apiService';
 import MapComponent from '../MapComponent';
 import {Ionicons} from "@expo/vector-icons";
+import { getImage } from '../utils/imageMap';
+import Header from "../header/header";
 
 const { width, height } = Dimensions.get('window');
-
-const imageMap = {
-    'white-tesla.png': require('../assets/cars/white-tesla.png'),
-    'black-toyota.png': require('../assets/cars/black-toyota.png'),
-    'gray-toyota.png': require('../assets/cars/gray-toyota.png'),
-    'red-bmw.png': require('../assets/cars/red-bmw.png'),
-    'blue-bmw.png': require('../assets/cars/blue-bmw.png'),
-    'black-audi.png': require('../assets/cars/black-audi.png'),
-    'blue-honda.png': require('../assets/cars/blue-honda.png'),
-    'green-mini.png': require('../assets/cars/green-mini.png'),
-    'black-land-rover.png': require('../assets/cars/black-land-rover.png'),
-    'blue-jeep.png': require('../assets/cars/blue-jeep.png'),
-    'black-bmw.png': require('../assets/cars/black-bmw.png'),
-    'black-noah-toyota.png': require('../assets/cars/black-noah-toyota.png'),
-    'blue-ford.png': require('../assets/cars/blue-ford.png'),
-    'silver-bmw.png': require('../assets/cars/silver-bmw.png'),
-};
-
-const getImage = (imageName: string) => {
-    return imageMap[imageName];
-};
 
 const CarDetailsScreen = ({ route, navigation }) => {
     const { carId } = route.params;
@@ -41,7 +22,7 @@ const CarDetailsScreen = ({ route, navigation }) => {
 
     const translateY = useSharedValue(0);
     const [isExpanded, setIsExpanded] = useState(false);
-    const maxTranslateY = height * 0.5;
+    const maxTranslateY = height * 0.37;
 
     useEffect(() => {
         // Fetch car details from API when component mounts
@@ -133,48 +114,49 @@ const CarDetailsScreen = ({ route, navigation }) => {
                     />
                 )}
 
-                    {/* Car details */}
-                    <View style={styles.detailCard}>
-                        <View style={styles.specificationsContainer}>
-                            <View style={styles.specBox}>
-                                <Text style={styles.specTitle}>{car.type}</Text>
-                            </View>
-                            <View style={styles.specBox}>
-                                <Text style={styles.specTitle}>{car.number_of_seats} seats</Text>
-                            </View>
+                {/* Car details */}
+                <View style={styles.detailCard}>
+                    <View style={styles.carDetailsContainer}>
+                        <View style={styles.carDetailItem}>
+                            <Ionicons name="car" size={30} color="black" />
+                            <Text style={styles.carDetailText}>{car.type}</Text>
                         </View>
-
-                        <Text style={styles.specificationsHeader}>SPECIFICATIONS</Text>
-                        <ScrollView
-                            horizontal={true}
-                            showsHorizontalScrollIndicator={false}
-                            style={styles.specificationsContainer}>
-                            {car.specifications && Object.entries(car.specifications).map(([key, value]) => (
-                                <View key={key} style={styles.specBox}>
-                                    <Text style={styles.specificationKey}>{`${key} `}</Text>
-                                    <Text style={styles.specificationValue}>{`${value}`}</Text>
-                                </View>
-                            ))}
-                        </ScrollView>
-
-                        {/* Footer with price and booking button */}
-                        <View style={styles.footerContainer}>
-                            <View style={styles.footerPriceTag}>
-                                <Text style={styles.footerPrice}>${car.price}</Text>
-                                <Text style={styles.footerPricePerDay}> per day</Text>
-                            </View>
-
-                            <View>
-                                <TouchableOpacity
-                                    onPress={() => navigation.navigate('Booking', { carId: car.id })}
-                                    style={styles.footerButtonContainer}
-                                >
-                                    <Text style={styles.footerButtonText}>Book Now</Text>
-                                </TouchableOpacity>
-                            </View>
+                        <View style={styles.carDetailItem}>
+                            <Ionicons name="people" size={30} color="black" />
+                            <Text style={styles.carDetailText}>{car.number_of_seats} seats</Text>
                         </View>
                     </View>
-                </Animated.View>
+
+                    <Text style={styles.specificationsHeader}>SPECIFICATIONS</Text>
+                    <ScrollView
+                        horizontal={true}
+                        showsHorizontalScrollIndicator={false}
+                        style={styles.specificationsContainer}>
+                        {car.specifications && Object.entries(car.specifications).map(([key, value]) => (
+                            <View key={key} style={styles.specBox}>
+                                <Text style={styles.specificationKey}>{`${key} `}</Text>
+                                <Text style={styles.specificationValue}>{`${value}`}</Text>
+                            </View>
+                        ))}
+                    </ScrollView>
+                </View>
+            </Animated.View>
+            {/* Footer with price and booking button */}
+            <View style={styles.footerContainer}>
+                <View style={styles.footerPriceTag}>
+                    <Text style={styles.footerPrice}>${car.price}</Text>
+                    <Text style={styles.footerPricePerDay}>/day</Text>
+                </View>
+
+                <View>
+                    <TouchableOpacity
+                        onPress={() => navigation.navigate('Booking', { carId: car.id })}
+                        style={styles.footerButtonContainer}
+                    >
+                        <Text style={styles.footerButtonText}>Book Now</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
         </View>
     );
 };
@@ -202,8 +184,7 @@ const styles = StyleSheet.create({
     mainCard: {
         flex: 1,
         backgroundColor: '#6836F5',
-        borderTopLeftRadius: 30,
-        borderTopRightRadius: 30,
+        borderRadius: 40,
         position: 'absolute',
         bottom: 0,
         width: '100%',
@@ -216,9 +197,11 @@ const styles = StyleSheet.create({
         paddingTop: 20,
     },
     modelName: {
+        marginVertical: 10,
+        fontFamily: 'Montserrat-Bold',
+        fontWeight: 'bold',
         marginTop: 20,
         fontSize: 28,
-        fontWeight: 'bold',
         color: '#FFFFFF',
     },
     brandContainer: {
@@ -226,11 +209,12 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
         paddingVertical: 10,
         borderRadius: 25,
-        marginTop: 15,
+        marginTop: 10,
         alignSelf: 'flex-start',
         marginLeft: 7,
     },
     brandName: {
+        fontFamily: 'Montserrat-Bold',
         fontSize: 16,
         color: '#6836F5',
         fontWeight: '600',
@@ -246,8 +230,7 @@ const styles = StyleSheet.create({
     detailCard: {
         flex: 1,
         backgroundColor: '#f1f0f5',
-        borderTopLeftRadius: 20,
-        borderTopRightRadius: 20,
+        borderRadius: 40,
         marginTop: 30,
         paddingTop: 40,
         paddingLeft: 20,
@@ -257,6 +240,20 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.2,
         shadowRadius: 5,
         elevation: 5,
+    },
+    carDetailsContainer: {
+        marginTop: 10, // Add some spacing above this section if needed
+    },
+    carDetailItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 10,
+    },
+    carDetailText: {
+        fontFamily: "Montserrat-Bold",
+        fontSize: 18,
+        color: '#000', // Text color (black or as needed)
+        marginLeft: 20, // Add space between icon and text
     },
     specTitle: {
         fontSize: 16,
@@ -268,9 +265,10 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     specificationsHeader: {
+        fontFamily: "Montserrat-ExtraBold",
         fontSize: 18,
         fontWeight: 'bold',
-        color: '#BFBFBE',
+        color: '#969696',
         marginTop: 40,
     },
     specificationsContainer: {
@@ -281,18 +279,24 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         padding: 10,
         borderRadius: 10,
-        width: 110,
-        height: 80,
+        width: 130,
+        height: 100,
         justifyContent: 'flex-start',
         elevation: 3,
         margin: 5,
+        shadowColor: '#000',
+        shadowOpacity: 0.05,
+        shadowRadius: 3,
+        shadowOffset: { width: 0, height: 1 },
     },
     specificationKey: {
+        fontFamily: "Montserrat-Medium",
         fontSize: 14,
         color: '#888888',
     },
     specificationValue: {
-        fontSize: 16,
+        fontFamily: "Montserrat-Bold",
+        fontSize: 18,
         fontWeight: 'bold',
         color: '#000000',
         marginTop: 4,
@@ -324,14 +328,16 @@ const styles = StyleSheet.create({
         borderRadius: 20,
     },
     footerPrice: {
-        fontSize: 18,
+        fontSize: 24,
         fontWeight: 'bold',
         color: '#000000',
     },
     footerPricePerDay: {
+        fontFamily: 'Montserrat-Bold',
         fontSize: 14,
         color: '#000000',
-        marginLeft: 5,
+        marginTop: 8,
+        marginLeft: 2,
     },
     footerButtonContainer: {
         backgroundColor: '#6836F5',
@@ -340,6 +346,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 30,
     },
     footerButtonText: {
+        fontFamily: 'Montserrat-Bold',
         color: '#FFFFFF',
         fontSize: 18,
         fontWeight: 'bold',
@@ -356,6 +363,7 @@ const styles = StyleSheet.create({
     },
 
     toggleButtonText: {
+        fontFamily: 'Montserrat-Bold',
         color: '#6836F5',
         fontWeight: 'bold',
         fontSize: 12,
