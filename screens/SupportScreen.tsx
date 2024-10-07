@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
-import Header from "../header/header";  // Asegúrate de importar el Header
+import Header from "../header/header";
 import { useNavigation } from '@react-navigation/native';  // Import useNavigation
 
 const SupportScreen: React.FC = () => {

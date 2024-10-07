@@ -85,10 +85,10 @@ const styles = StyleSheet.create({
         marginTop: 55,
     },
     listContainer: {
-        paddingTop: 110,  // Espacio para el header
+        paddingTop: 110,
         paddingHorizontal: 20,
         flexGrow: 1,
-        paddingBottom: 100, // Espacio para el botón de inicio
+        paddingBottom: 100,
     },
     notificationItem: {
         padding: 15,
