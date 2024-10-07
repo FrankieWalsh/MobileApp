@@ -94,12 +94,14 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 2 },
     },
     sectionTitle: {
+        fontFamily: "Montserrat-Bold",
         fontSize: 20,
         fontWeight: 'bold',
         marginBottom: 10,
         color: '#6836F5',
     },
     text: {
+        fontFamily: "Montserrat-Medium",
         fontSize: 16,
         color: '#333',
         marginBottom: 5,
@@ -116,6 +118,7 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
     },
     faqQuestion: {
+        fontFamily: "Montserrat-Medium",
         fontSize: 18,
         fontWeight: '500',
         color: '#6836F5',
@@ -128,6 +131,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
     },
     faqAnswer: {
+        fontFamily: "Montserrat-Medium",
         fontSize: 16,
         color: '#555',
     },
@@ -148,6 +152,7 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 2 },
     },
     homeButtonText: {
+        fontFamily: "Montserrat-Bold",
         color: '#fff',
         fontSize: 18,
         fontWeight: 'bold',

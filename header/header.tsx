@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { View, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { getNotifications } from '../apiService';
 import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native'; // Import useRoute
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Header = ({ title }) => {
+const Header = () => {
     const navigation = useNavigation();
     const route = useRoute();  // Get the current route
     const [hasUnreadNotifications, setHasUnreadNotifications] = useState(false);

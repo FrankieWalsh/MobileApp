@@ -2,31 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Image, View, FlatList, Text, TouchableOpacity, StyleSheet, ActivityIndicator, Dimensions } from 'react-native';
 import { getCars } from '../apiService';
 import FilterComponent from '../FilterComponent';
+import { getImage } from '../utils/imageMap';
 import Header from "../header/header";
 import { useNavigation } from '@react-navigation/native';  // Import useNavigation
 
-const imageMap = {
-    'white-tesla.png': require('../assets/cars/white-tesla.png'),
-    'black-toyota.png': require('../assets/cars/black-toyota.png'),
-    'gray-toyota.png': require('../assets/cars/gray-toyota.png'),
-    'red-bmw.png': require('../assets/cars/red-bmw.png'),
-    'blue-bmw.png': require('../assets/cars/blue-bmw.png'),
-    'black-audi.png': require('../assets/cars/black-audi.png'),
-    'blue-honda.png': require('../assets/cars/blue-honda.png'),
-    'green-mini.png': require('../assets/cars/green-mini.png'),
-    'black-land-rover.png': require('../assets/cars/black-land-rover.png'),
-    'blue-jeep.png': require('../assets/cars/blue-jeep.png'),
-    'black-bmw.png': require('../assets/cars/black-bmw.png'),
-    'black-noah-toyota.png': require('../assets/cars/black-noah-toyota.png'),
-    'blue-ford.png': require('../assets/cars/blue-ford.png'),
-    'silver-bmw.png': require('../assets/cars/silver-bmw.png'),
-};
-
 const { width } = Dimensions.get('window');
-
-const getImage = (imageName: string) => {
-    return imageMap[imageName];
-};
 
 const CarListScreen: React.FC = ({ navigation }: any) => {
     const [cars, setCars] = useState<any[]>([]);
@@ -95,7 +75,7 @@ const CarListScreen: React.FC = ({ navigation }: any) => {
                     <Text style={styles.brand}>{item.brand}</Text>
                     <View style={styles.pricetag}>
                         <Text style={styles.price}>${item.price}</Text>
-                        <Text style={styles.pricePerDay}> per day</Text>
+                        <Text style={styles.pricePerDay}> /day</Text>
                     </View>
                 </View>
             </View>
@@ -140,10 +120,10 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: '#F6F5FA',
         flex: 1,
-        padding: 10,
     },
     listContainer: {
         marginTop: -10,
+        padding: 10,
     },
     row: {
         justifyContent: 'space-between',
@@ -158,7 +138,10 @@ const styles = StyleSheet.create({
         padding: 10,
         width: (width / 2) - 23,
         alignItems: 'center',
-        shadowRadius: 4,
+        shadowColor: '#000',
+        shadowOffset: { width: -1, height: 0 },
+        shadowOpacity: 0.1,
+        shadowRadius: 3,
     },
     carImage: {
         width: '100%',
@@ -170,12 +153,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     model: {
+        fontFamily: "Montserrat-Bold",
         fontSize: 15,
         fontWeight: 'bold',
         color: '#111317',
         marginBottom: 4,
     },
     brand: {
+        fontFamily: "Montserrat-Medium",
         fontSize: 14,
         color: '#2F3035',
         marginBottom: 8,
@@ -189,11 +174,13 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     price: {
+        fontFamily: "Montserrat-Bold",
         fontSize: 15,
         fontWeight: 'bold',
         color: '#F6F5FA',
     },
     pricePerDay: {
+        fontFamily: "Montserrat-Medium",
         color: '#F6F5FA',
     },
     homeButton: {
@@ -213,6 +200,7 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 2 },
     },
     homeButtonText: {
+        fontFamily: "Montserrat-Bold",
         color: '#fff',
         fontSize: 18,
         fontWeight: 'bold',

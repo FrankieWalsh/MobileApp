@@ -207,7 +207,7 @@ const BookingScreen = ({ route, navigation }) => {
 
                 <View>
                     <TouchableOpacity style={styles.footerButtonContainer} onPress={handleBooking}>
-                        <Text style={styles.footerButtonText}>Confirm Booking</Text>
+                        <Text style={styles.footerButtonText}>Confirm</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -231,6 +231,8 @@ const styles = StyleSheet.create({
         marginTop: 20,
     },
     heading: {
+        padding: 10,
+        fontFamily: "Montserrat-Bold",
         fontSize: 24,
         fontWeight: 'bold',
         marginBottom: -50,
@@ -257,6 +259,8 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     calendarText: {
+        fontFamily: "Montserrat-Bold",
+        paddingHorizontal: 7,
         color: '#333', // General text color for the calendar
         fontWeight: 'bold', // Make the calendar text bold
     },
@@ -304,6 +308,7 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 2 },
     },
     confirmButtonText: {
+        fontFamily: "Montserrat-Bold",
         color: '#fff',
         fontSize: 18,
         fontWeight: 'bold',
@@ -317,12 +322,14 @@ const styles = StyleSheet.create({
         borderRadius: 20,
     },
     footerPrice: {
-        fontSize: 18,
+        fontFamily: "Montserrat-Bold",
+        fontSize: 22,
         fontWeight: 'bold',
         color: '#000000',
     },
     footerPricePerDay: {
-        fontSize: 14,
+        fontFamily: "Montserrat-Medium",
+        fontSize: 16,
         color: '#000000',
         marginLeft: 5,
     },
@@ -333,6 +340,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 30,
     },
     footerButtonText: {
+        fontFamily: "Montserrat-Bold",
         color: '#FFFFFF',
         fontSize: 18,
         fontWeight: 'bold',
@@ -361,6 +369,7 @@ const styles = StyleSheet.create({
 // Picker styles to make the location dropdown match the calendar style
 const pickerSelectStyles = StyleSheet.create({
     inputIOS: {
+        fontFamily: "Montserrat-Medium",
         fontSize: 16,
         paddingVertical: 12,
         paddingHorizontal: 10,
@@ -373,6 +382,7 @@ const pickerSelectStyles = StyleSheet.create({
         backgroundColor: '#fff',
     },
     inputAndroid: {
+        fontFamily: "Montserrat-Medium",
         fontSize: 16,
         paddingVertical: 8,
         paddingHorizontal: 10,

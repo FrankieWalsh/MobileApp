@@ -164,25 +164,35 @@ const FilterComponent: React.FC<FilterComponentProps> = ({
 
 const styles = StyleSheet.create({
     container: {
-        padding: 10,
+        padding: 20,
     },
     filterButton: {
         backgroundColor: '#6836F5',
         padding: 10,
         marginHorizontal: -3,
-        borderRadius: 5,
+        borderRadius: 25,
         marginTop: 120,
+        shadowColor: '#000',
+        shadowOpacity: 0.2,
+        shadowRadius: 8,
+        shadowOffset: { width: 0, height: 2 },
     },
     filterButtonText: {
+        fontFamily: "Montserrat-Bold",
         color: '#fff',
         fontWeight: 'bold',
         textAlign: 'center',
     },
     filterContainer: {
+        marginTop: 15,
         marginHorizontal: -4,
         backgroundColor: '#fff',
         borderRadius: 10,
         padding: 15,
+        shadowColor: '#000',
+        shadowOpacity: 0.2,
+        shadowRadius: 8,
+        shadowOffset: { width: 0, height: 2 },
     },
     sliderContainer: {
         height: 75,
@@ -190,17 +200,20 @@ const styles = StyleSheet.create({
         zIndex: 1,
     },
     typeLabel: {
+        fontFamily: "Montserrat-Bold",
         paddingLeft: 13,
         fontSize: 16,
         fontWeight: 'bold',
         marginBottom: 3,
     },
     sliderLabel: {
+        fontFamily: "Montserrat-Bold",
         fontSize: 16,
         fontWeight: 'bold',
         marginBottom: 3,
     },
     sliderValueText: {
+        fontFamily: "Montserrat-Medium",
         fontSize: 14,
         color: '#2F3035',
         textAlign: 'center',
@@ -224,6 +237,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     dropdownText: {
+        fontFamily: "Montserrat-Medium",
         fontSize: 16,
         color: '#2F3035',
     },

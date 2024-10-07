@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     title: {
+        fontFamily: "Montserrat-Bold",
         fontSize: 24,
         marginBottom: 20,
     },

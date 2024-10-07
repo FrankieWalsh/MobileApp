@@ -106,6 +106,7 @@ const styles = StyleSheet.create({
         height: 150,
     },
     title: {
+        fontFamily: "Montserrat-Bold",
         fontSize: 32,
         fontWeight: 'bold',
         color: '#FFFFFF',
@@ -113,6 +114,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     subtitle: {
+        fontFamily: "Montserrat-Medium",
         fontSize: 18,
         color: '#eeeeee',
         textAlign: 'center',
@@ -139,6 +141,7 @@ const styles = StyleSheet.create({
         marginRight: 10,
     },
     input: {
+        fontFamily: "Montserrat-Medium",
         flex: 1,
         fontSize: 16,
         color: '#333',
@@ -152,6 +155,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 20,
     },
     buttonText: {
+        fontFamily: "Montserrat-Bold",
         color: '#fff',
         fontSize: 18,
         fontWeight: 'bold',
@@ -166,6 +170,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 20,
     },
     signUpText: {
+        fontFamily: "Montserrat-Medium",
         color: '#fff',
         fontSize: 16,
     },

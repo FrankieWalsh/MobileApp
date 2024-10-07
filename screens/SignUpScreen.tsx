@@ -86,6 +86,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 30,
     },
     title: {
+        fontFamily: "Montserrat-Bold",
         fontSize: 32,
         fontWeight: 'bold',
         color: '#FFFFFF',
@@ -93,6 +94,7 @@ const styles = StyleSheet.create({
         marginBottom: 40,
     },
     input: {
+        fontFamily: "Montserrat-Medium",
         height: 50,
         backgroundColor: '#fff',
         borderRadius: 25,
@@ -109,6 +111,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     buttonText: {
+        fontFamily: "Montserrat-Bold",
         color: '#fff',
         fontSize: 18,
         fontWeight: 'bold',
@@ -118,6 +121,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     loginText: {
+        fontFamily: "Montserrat-Medium",
         color: '#fff',
         fontSize: 16,
         textDecorationLine: 'underline',

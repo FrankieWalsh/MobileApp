@@ -111,6 +111,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
     },
     message: {
+        fontFamily: "Montserrat-Medium",
         fontSize: 16,
         fontWeight: '500',
         color: '#333',
@@ -122,6 +123,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
     },
     details: {
+        fontFamily: "Montserrat-Medium",
         fontSize: 14,
         color: '#555',
     },
@@ -142,6 +144,7 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 2 },
     },
     homeButtonText: {
+        fontFamily: "Montserrat-Bold",
         color: '#fff',
         fontSize: 18,
         fontWeight: 'bold',
