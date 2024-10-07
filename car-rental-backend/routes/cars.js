@@ -7,7 +7,6 @@ router.get('/', async (req, res) => {
     console.log("Request received for /api/cars");  // Log when the request comes in
     try {
         const cars = await Car.find();
-        console.log("Cars found:", cars);  // Log the cars returned
         res.json(cars);
     } catch (err) {
         res.status(500).json({ message: err.message });
@@ -18,8 +17,6 @@ router.put('/availability/true', async (req, res) => {
     try {
         // Use updateMany to set availability to true for all cars
         const result = await Car.updateMany({}, { availability: true });
-
-        console.log("All cars' availability updated to true.");
         res.json({ message: 'All cars availability set to true', result });
     } catch (err) {
         res.status(500).json({ message: err.message });

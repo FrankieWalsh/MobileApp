@@ -9,13 +9,11 @@ const Location = require('../models/Location');
 // POST a new booking
 router.post('/', async (req, res) => {
     const { carId, rentalStartDate, rentalEndDate, pickupLocation, dropOffLocation, userId } = req.body;
-    console.log(req.body)
 
     try {
         const car = await Car.findById(carId);
         if (!car) return res.status(404).json({ message: 'Car not found' });
 
-        // Ensure the car is available
         if (!car.availability) return res.status(400).json({ message: 'Car is already booked' });
 
         // Populate the pickup and dropoff locations to get the addresses
@@ -26,7 +24,6 @@ router.post('/', async (req, res) => {
             return res.status(404).json({ message: 'Location not found' });
         }
 
-        // Create a new booking
         const booking = new Booking({
             car_id: carId,
             rental_start_date: new Date(rentalStartDate),

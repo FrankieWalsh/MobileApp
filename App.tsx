@@ -8,7 +8,6 @@ import SplashScreen from './screens/SplashScreen';
 import HomeScreen from './screens/HomeScreen';
 import CarDetailsScreen from './screens/CarDetailsScreen';
 import BookingScreen from './screens/BookingScreen';
-import PaymentScreen from './screens/PaymentScreen';
 import ConfirmationScreen from './screens/ConfirmationScreen';
 import LoginScreen from './screens/LoginScreen';
 import SignUpScreen from './screens/SignUpScreen';
@@ -43,7 +42,6 @@ const App: React.FC = () => {
           <Stack.Screen name="Notifications" component={NotificationsScreen} options={{ headerShown: false }}/>
           <Stack.Screen name="CarList" component={CarListScreen} options={{ headerShown: false }}/>
           <Stack.Screen name="Booking" component={BookingScreen} options={{ headerShown: false }}/>
-          <Stack.Screen name="Payment" component={PaymentScreen} options={{ headerShown: false }}/>
           <Stack.Screen name="Confirmation" component={ConfirmationScreen} options={{ headerShown: false }}/>
         </Stack.Navigator>
       </NavigationContainer>
